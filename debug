@@ -1,0 +1,1761 @@
+$VAR1 = bless( {
+                 'plugins' => {
+                                'Perl' => bless( {
+                                                   'plugins' => {},
+                                                   'linestart' => 1,
+                                                   'lists' => {
+                                                                'keywords' => [
+                                                                                'while',
+                                                                                'use',
+                                                                                'until',
+                                                                                'unless',
+                                                                                'sub',
+                                                                                'return',
+                                                                                'require',
+                                                                                'require',
+                                                                                'package',
+                                                                                'our',
+                                                                                'no',
+                                                                                'next',
+                                                                                'my',
+                                                                                'local',
+                                                                                'last',
+                                                                                'if',
+                                                                                'foreach',
+                                                                                'for',
+                                                                                'elsif',
+                                                                                'else',
+                                                                                'each',
+                                                                                'do',
+                                                                                'continue',
+                                                                                'break',
+                                                                                '__PACKAGE__',
+                                                                                '__LINE__',
+                                                                                '__FILE__',
+                                                                                '__END__',
+                                                                                '__DATA__',
+                                                                                'END',
+                                                                                'BEGIN'
+                                                                              ],
+                                                                'functions' => [
+                                                                                 'write',
+                                                                                 'warn',
+                                                                                 'wantarray',
+                                                                                 'waitpid',
+                                                                                 'wait',
+                                                                                 'vec',
+                                                                                 'values',
+                                                                                 'utime',
+                                                                                 'untie',
+                                                                                 'unshift',
+                                                                                 'unpack',
+                                                                                 'unlink',
+                                                                                 'undef',
+                                                                                 'umask',
+                                                                                 'ucfirst',
+                                                                                 'uc',
+                                                                                 'truncate',
+                                                                                 'times',
+                                                                                 'time',
+                                                                                 'tie',
+                                                                                 'telldir',
+                                                                                 'tell',
+                                                                                 'syswrite',
+                                                                                 'system',
+                                                                                 'sysseek',
+                                                                                 'sysread',
+                                                                                 'syscall',
+                                                                                 'symlink',
+                                                                                 'substr',
+                                                                                 'sub',
+                                                                                 'study',
+                                                                                 'stat',
+                                                                                 'srand',
+                                                                                 'sqrt',
+                                                                                 'sprintf',
+                                                                                 'split',
+                                                                                 'splice',
+                                                                                 'sort',
+                                                                                 'socketpair',
+                                                                                 'socket',
+                                                                                 'sleep',
+                                                                                 'sin',
+                                                                                 'shutdown',
+                                                                                 'shmwrite',
+                                                                                 'shmread',
+                                                                                 'shmget',
+                                                                                 'shmctl',
+                                                                                 'shift',
+                                                                                 'setsockopt',
+                                                                                 'setservent',
+                                                                                 'setpwent',
+                                                                                 'setprotoent',
+                                                                                 'setpriority',
+                                                                                 'setpgrp',
+                                                                                 'setnetent',
+                                                                                 'sethostent',
+                                                                                 'setgrent',
+                                                                                 'send',
+                                                                                 'semop',
+                                                                                 'semget',
+                                                                                 'semctl',
+                                                                                 'select',
+                                                                                 'seekdir',
+                                                                                 'seek',
+                                                                                 'scalar',
+                                                                                 'rmdir',
+                                                                                 'rindex',
+                                                                                 'rewinddir',
+                                                                                 'reverse',
+                                                                                 'return',
+                                                                                 'reset',
+                                                                                 'rename',
+                                                                                 'ref',
+                                                                                 'redo',
+                                                                                 'recv',
+                                                                                 'readlink',
+                                                                                 'readline',
+                                                                                 'readdir',
+                                                                                 'read',
+                                                                                 'rand',
+                                                                                 'quotemeta',
+                                                                                 'push',
+                                                                                 'prototype',
+                                                                                 'printf',
+                                                                                 'print',
+                                                                                 'pos',
+                                                                                 'pop',
+                                                                                 'pipe',
+                                                                                 'package',
+                                                                                 'pack',
+                                                                                 'ord',
+                                                                                 'opendir',
+                                                                                 'open',
+                                                                                 'oct',
+                                                                                 'msgsnd',
+                                                                                 'msgrcv',
+                                                                                 'msgget',
+                                                                                 'msgctl',
+                                                                                 'mkdir',
+                                                                                 'map',
+                                                                                 'lstat',
+                                                                                 'log',
+                                                                                 'lock',
+                                                                                 'localtime',
+                                                                                 'listen',
+                                                                                 'link',
+                                                                                 'length',
+                                                                                 'lcfirst',
+                                                                                 'lc',
+                                                                                 'last',
+                                                                                 'kill',
+                                                                                 'keys',
+                                                                                 'join',
+                                                                                 'ioctl',
+                                                                                 'int',
+                                                                                 'index',
+                                                                                 'import',
+                                                                                 'hex',
+                                                                                 'grep',
+                                                                                 'goto',
+                                                                                 'gmtime',
+                                                                                 'glob',
+                                                                                 'getsockopt',
+                                                                                 'getsockname',
+                                                                                 'getservent',
+                                                                                 'getservbyport',
+                                                                                 'getservbyname',
+                                                                                 'getpwuid',
+                                                                                 'getpwnam',
+                                                                                 'getpwent',
+                                                                                 'getprotoent',
+                                                                                 'getprotobynumber',
+                                                                                 'getprotobyname',
+                                                                                 'getpriority',
+                                                                                 'getppid',
+                                                                                 'getpgrp',
+                                                                                 'getpeername',
+                                                                                 'getnetent',
+                                                                                 'getnetbyname',
+                                                                                 'getnetbyaddr',
+                                                                                 'getlogin',
+                                                                                 'gethostent',
+                                                                                 'gethostbyname',
+                                                                                 'gethostbyaddr',
+                                                                                 'getgrnam',
+                                                                                 'getgrgid',
+                                                                                 'getgrent',
+                                                                                 'getc',
+                                                                                 'formline',
+                                                                                 'format',
+                                                                                 'fork',
+                                                                                 'flock',
+                                                                                 'fileno',
+                                                                                 'fcntl',
+                                                                                 'exp',
+                                                                                 'exit',
+                                                                                 'exists',
+                                                                                 'exec',
+                                                                                 'eval',
+                                                                                 'eof',
+                                                                                 'endservent',
+                                                                                 'endpwent',
+                                                                                 'endprotoent',
+                                                                                 'endnetent',
+                                                                                 'endhostent',
+                                                                                 'endgrent',
+                                                                                 'dump',
+                                                                                 'die',
+                                                                                 'delete',
+                                                                                 'defined',
+                                                                                 'dbmopen',
+                                                                                 'dbmclose',
+                                                                                 'crypt',
+                                                                                 'cos',
+                                                                                 'connect',
+                                                                                 'closedir',
+                                                                                 'close',
+                                                                                 'chroot',
+                                                                                 'chr',
+                                                                                 'chown',
+                                                                                 'chop',
+                                                                                 'chomp',
+                                                                                 'chmod',
+                                                                                 'chdir',
+                                                                                 'caller',
+                                                                                 'bless',
+                                                                                 'binmode',
+                                                                                 'bind',
+                                                                                 'atan2',
+                                                                                 'alarm',
+                                                                                 'accept',
+                                                                                 'abs'
+                                                                               ],
+                                                                'pragmas' => [
+                                                                               'warnings',
+                                                                               'vars',
+                                                                               'utf8',
+                                                                               'subs',
+                                                                               'strict',
+                                                                               'sigtrap',
+                                                                               'open',
+                                                                               'locale',
+                                                                               'less',
+                                                                               'integer',
+                                                                               'filetest',
+                                                                               'english',
+                                                                               'diagnostics',
+                                                                               'constant',
+                                                                               'bytes'
+                                                                             ],
+                                                                'operators' => [
+                                                                                 '~=',
+                                                                                 '||=',
+                                                                                 '||',
+                                                                                 '|=',
+                                                                                 '|',
+                                                                                 'or',
+                                                                                 'not',
+                                                                                 'ne',
+                                                                                 'eq',
+                                                                                 'and',
+                                                                                 '^',
+                                                                                 '\\\\',
+                                                                                 '?=',
+                                                                                 '>>',
+                                                                                 '>',
+                                                                                 '=>',
+                                                                                 '=',
+                                                                                 '<<',
+                                                                                 '<',
+                                                                                 ';',
+                                                                                 '::',
+                                                                                 '/=',
+                                                                                 '.',
+                                                                                 '->',
+                                                                                 '-=',
+                                                                                 '-',
+                                                                                 ',',
+                                                                                 '+=',
+                                                                                 '+',
+                                                                                 '*=',
+                                                                                 '**=',
+                                                                                 '*',
+                                                                                 '&=',
+                                                                                 '&&=',
+                                                                                 '&&',
+                                                                                 '&',
+                                                                                 '%',
+                                                                                 '!='
+                                                                               ]
+                                                              },
+                                                   'keywordcase' => 0,
+                                                   'format_table' => {},
+                                                   'snippetattribute' => '',
+                                                   'linesegment' => '',
+                                                   'captured' => [],
+                                                   'substitutions' => {},
+                                                   'debug' => 0,
+                                                   'out' => [],
+                                                   'snippet' => '',
+                                                   'stack' => [],
+                                                   'lastchar' => '',
+                                                   'basecontext' => 'normal',
+                                                   'engine' => $VAR1,
+                                                   'contextdata' => {
+                                                                      'tr' => {
+                                                                                'fallthrough' => '#pop',
+                                                                                'attribute' => 'Pattern',
+                                                                                'callback' => sub { "DUMMY" },
+                                                                                'lineending' => '#pop'
+                                                                              },
+                                                                      'subst_paren_pattern' => {
+                                                                                                 'attribute' => 'Pattern',
+                                                                                                 'callback' => sub { "DUMMY" }
+                                                                                               },
+                                                                      'normal' => {
+                                                                                    'attribute' => 'Normal Text',
+                                                                                    'callback' => sub { "DUMMY" }
+                                                                                  },
+                                                                      'pat_char_class' => {
+                                                                                            'attribute' => 'Pattern Character Class',
+                                                                                            'callback' => sub { "DUMMY" }
+                                                                                          },
+                                                                      'sub_name_def' => {
+                                                                                          'fallthrough' => '#pop',
+                                                                                          'attribute' => 'Normal Text',
+                                                                                          'callback' => sub { "DUMMY" },
+                                                                                          'lineending' => '#pop'
+                                                                                        },
+                                                                      'string' => {
+                                                                                    'attribute' => 'String',
+                                                                                    'callback' => sub { "DUMMY" }
+                                                                                  },
+                                                                      'var_detect_unsafe' => {
+                                                                                               'fallthrough' => '#pop#pop',
+                                                                                               'attribute' => 'Data Type',
+                                                                                               'callback' => sub { "DUMMY" },
+                                                                                               'lineending' => '#pop#pop'
+                                                                                             },
+                                                                      'subst_slash_pattern' => {
+                                                                                                 'attribute' => 'Pattern',
+                                                                                                 'callback' => sub { "DUMMY" },
+                                                                                                 'dynamic' => 1
+                                                                                               },
+                                                                      'subst_sq_pattern' => {
+                                                                                              'attribute' => 'Pattern',
+                                                                                              'callback' => sub { "DUMMY" }
+                                                                                            },
+                                                                      'var_detect_rules' => {
+                                                                                              'attribute' => 'Data Type',
+                                                                                              'callback' => sub { "DUMMY" },
+                                                                                              'lineending' => '#pop#pop'
+                                                                                            },
+                                                                      'pattern_brace' => {
+                                                                                           'attribute' => 'Pattern',
+                                                                                           'callback' => sub { "DUMMY" }
+                                                                                         },
+                                                                      'ip_string_2' => {
+                                                                                         'attribute' => 'String (interpolated)',
+                                                                                         'callback' => sub { "DUMMY" }
+                                                                                       },
+                                                                      'ip_string_4' => {
+                                                                                         'attribute' => 'String (interpolated)',
+                                                                                         'callback' => sub { "DUMMY" }
+                                                                                       },
+                                                                      'subst_bracket_pattern' => {
+                                                                                                   'attribute' => 'Pattern',
+                                                                                                   'callback' => sub { "DUMMY" }
+                                                                                                 },
+                                                                      'here_document' => {
+                                                                                           'attribute' => 'String (interpolated)',
+                                                                                           'callback' => sub { "DUMMY" },
+                                                                                           'dynamic' => 1
+                                                                                         },
+                                                                      'subst_curlybrace_middle' => {
+                                                                                                     'attribute' => 'Normal Text',
+                                                                                                     'callback' => sub { "DUMMY" }
+                                                                                                   },
+                                                                      'subst_bracket_replace' => {
+                                                                                                   'attribute' => 'String (interpolated)',
+                                                                                                   'callback' => sub { "DUMMY" }
+                                                                                                 },
+                                                                      'ip_string' => {
+                                                                                       'attribute' => 'String (interpolated)',
+                                                                                       'callback' => sub { "DUMMY" }
+                                                                                     },
+                                                                      'pattern_paren' => {
+                                                                                           'attribute' => 'Pattern',
+                                                                                           'callback' => sub { "DUMMY" }
+                                                                                         },
+                                                                      'subst_sq_replace' => {
+                                                                                              'attribute' => 'String',
+                                                                                              'callback' => sub { "DUMMY" }
+                                                                                            },
+                                                                      'end_handle' => {
+                                                                                        'attribute' => 'Nothing',
+                                                                                        'callback' => sub { "DUMMY" }
+                                                                                      },
+                                                                      'slash_safe_escape' => {
+                                                                                               'fallthrough' => '#pop',
+                                                                                               'attribute' => 'Normal Text',
+                                                                                               'callback' => sub { "DUMMY" },
+                                                                                               'lineending' => '#pop'
+                                                                                             },
+                                                                      'subst_curlybrace_pattern' => {
+                                                                                                      'attribute' => 'Pattern',
+                                                                                                      'callback' => sub { "DUMMY" }
+                                                                                                    },
+                                                                      'find_qw' => {
+                                                                                     'attribute' => 'Normal Text',
+                                                                                     'callback' => sub { "DUMMY" }
+                                                                                   },
+                                                                      'find_variable_unsafe' => {
+                                                                                                  'fallthrough' => '#pop',
+                                                                                                  'attribute' => 'Data Type',
+                                                                                                  'callback' => sub { "DUMMY" },
+                                                                                                  'lineending' => '#pop'
+                                                                                                },
+                                                                      'string_6' => {
+                                                                                      'attribute' => 'String',
+                                                                                      'callback' => sub { "DUMMY" },
+                                                                                      'dynamic' => 1
+                                                                                    },
+                                                                      'ip_string_3' => {
+                                                                                         'attribute' => 'String (interpolated)',
+                                                                                         'callback' => sub { "DUMMY" }
+                                                                                       },
+                                                                      'subst_curlybrace_replace_recursive' => {
+                                                                                                                'attribute' => 'String (interpolated)',
+                                                                                                                'callback' => sub { "DUMMY" }
+                                                                                                              },
+                                                                      'find_here_document' => {
+                                                                                                'attribute' => 'Normal Text',
+                                                                                                'callback' => sub { "DUMMY" },
+                                                                                                'lineending' => '#pop'
+                                                                                              },
+                                                                      'find_quoted' => {
+                                                                                         'attribute' => 'Normal Text',
+                                                                                         'callback' => sub { "DUMMY" }
+                                                                                       },
+                                                                      'quote_word_paren' => {
+                                                                                              'attribute' => 'Normal Text',
+                                                                                              'callback' => sub { "DUMMY" }
+                                                                                            },
+                                                                      'string_4' => {
+                                                                                      'attribute' => 'String',
+                                                                                      'callback' => sub { "DUMMY" }
+                                                                                    },
+                                                                      'data_handle' => {
+                                                                                         'attribute' => 'Data',
+                                                                                         'callback' => sub { "DUMMY" }
+                                                                                       },
+                                                                      'subst_paren_replace' => {
+                                                                                                 'attribute' => 'String (interpolated)',
+                                                                                                 'callback' => sub { "DUMMY" }
+                                                                                               },
+                                                                      'quote_word_bracket' => {
+                                                                                                'attribute' => 'Normal Text',
+                                                                                                'callback' => sub { "DUMMY" }
+                                                                                              },
+                                                                      'string_2' => {
+                                                                                      'attribute' => 'String',
+                                                                                      'callback' => sub { "DUMMY" }
+                                                                                    },
+                                                                      'quote_word' => {
+                                                                                        'attribute' => 'Normal Text',
+                                                                                        'callback' => sub { "DUMMY" },
+                                                                                        'dynamic' => 1
+                                                                                      },
+                                                                      'subst_curlybrace_replace' => {
+                                                                                                      'attribute' => 'String (interpolated)',
+                                                                                                      'callback' => sub { "DUMMY" }
+                                                                                                    },
+                                                                      'ipstring_internal' => {
+                                                                                               'attribute' => 'String (interpolated)',
+                                                                                               'callback' => sub { "DUMMY" }
+                                                                                             },
+                                                                      'regex_pattern_internal_rules_2' => {
+                                                                                                            'callback' => sub { "DUMMY" }
+                                                                                                          },
+                                                                      'here_document_dumb' => {
+                                                                                                'attribute' => 'Normal Text',
+                                                                                                'callback' => sub { "DUMMY" },
+                                                                                                'dynamic' => 1
+                                                                                              },
+                                                                      'string_5' => {
+                                                                                      'attribute' => 'String',
+                                                                                      'callback' => sub { "DUMMY" }
+                                                                                    },
+                                                                      'subst_slash_replace' => {
+                                                                                                 'attribute' => 'String (interpolated)',
+                                                                                                 'callback' => sub { "DUMMY" },
+                                                                                                 'dynamic' => 1
+                                                                                               },
+                                                                      'pattern_slash' => {
+                                                                                           'attribute' => 'Pattern',
+                                                                                           'callback' => sub { "DUMMY" }
+                                                                                         },
+                                                                      'ip_string_6' => {
+                                                                                         'attribute' => 'String (interpolated)',
+                                                                                         'callback' => sub { "DUMMY" },
+                                                                                         'dynamic' => 1
+                                                                                       },
+                                                                      'pattern_bracket' => {
+                                                                                             'attribute' => 'Pattern',
+                                                                                             'callback' => sub { "DUMMY" }
+                                                                                           },
+                                                                      'pattern_sq' => {
+                                                                                        'attribute' => 'Pattern',
+                                                                                        'callback' => sub { "DUMMY" }
+                                                                                      },
+                                                                      'var_detect' => {
+                                                                                        'fallthrough' => '#pop#pop',
+                                                                                        'attribute' => 'Data Type',
+                                                                                        'callback' => sub { "DUMMY" },
+                                                                                        'lineending' => '#pop#pop'
+                                                                                      },
+                                                                      'find_qqx' => {
+                                                                                      'attribute' => 'Normal Text',
+                                                                                      'callback' => sub { "DUMMY" }
+                                                                                    },
+                                                                      'pod' => {
+                                                                                 'attribute' => 'Pod',
+                                                                                 'callback' => sub { "DUMMY" }
+                                                                               },
+                                                                      'find_pattern' => {
+                                                                                          'attribute' => 'Pattern',
+                                                                                          'callback' => sub { "DUMMY" }
+                                                                                        },
+                                                                      'ip_string_5' => {
+                                                                                         'attribute' => 'String (interpolated)',
+                                                                                         'callback' => sub { "DUMMY" }
+                                                                                       },
+                                                                      'find_subst' => {
+                                                                                        'attribute' => 'Normal Text',
+                                                                                        'callback' => sub { "DUMMY" }
+                                                                                      },
+                                                                      'regex_pattern_internal_ip' => {
+                                                                                                       'attribute' => 'Pattern',
+                                                                                                       'callback' => sub { "DUMMY" }
+                                                                                                     },
+                                                                      'string_3' => {
+                                                                                      'attribute' => 'String',
+                                                                                      'callback' => sub { "DUMMY" }
+                                                                                    },
+                                                                      'package_qualified_blank' => {
+                                                                                                     'attribute' => 'Normal Text',
+                                                                                                     'callback' => sub { "DUMMY" }
+                                                                                                   },
+                                                                      'regex_pattern_internal_rules_1' => {
+                                                                                                            'callback' => sub { "DUMMY" }
+                                                                                                          },
+                                                                      'sub_arg_definition' => {
+                                                                                                'fallthrough' => '#pop#pop',
+                                                                                                'attribute' => 'Normal Text',
+                                                                                                'callback' => sub { "DUMMY" }
+                                                                                              },
+                                                                      'Backticked' => {
+                                                                                        'attribute' => 'String (interpolated)',
+                                                                                        'callback' => sub { "DUMMY" }
+                                                                                      },
+                                                                      'quote_word_brace' => {
+                                                                                              'attribute' => 'Normal Text',
+                                                                                              'callback' => sub { "DUMMY" }
+                                                                                            },
+                                                                      'pattern' => {
+                                                                                     'attribute' => 'Pattern',
+                                                                                     'callback' => sub { "DUMMY" },
+                                                                                     'dynamic' => 1
+                                                                                   },
+                                                                      'find_variable' => {
+                                                                                           'fallthrough' => '#pop',
+                                                                                           'attribute' => 'Data Type',
+                                                                                           'callback' => sub { "DUMMY" },
+                                                                                           'lineending' => '#pop'
+                                                                                         },
+                                                                      'pat_ext' => {
+                                                                                     'attribute' => 'Pattern Internal Operator',
+                                                                                     'callback' => sub { "DUMMY" }
+                                                                                   },
+                                                                      'comment' => {
+                                                                                     'attribute' => 'Comment',
+                                                                                     'callback' => sub { "DUMMY" },
+                                                                                     'lineending' => '#pop'
+                                                                                   },
+                                                                      'regex_pattern_internal' => {
+                                                                                                    'attribute' => 'Pattern',
+                                                                                                    'callback' => sub { "DUMMY" }
+                                                                                                  }
+                                                                    },
+                                                   'deliminators' => '\\s||\\.|\\(|\\)|:|\\!|\\+|,|-|<|=|>|\\%|\\&|\\*|\\/|;|\\?|\\[|\\]|\\^|\\{|\\||\\}|\\~|\\\\',
+                                                   'attributes' => {
+                                                                     'String (interpolated)' => 'String',
+                                                                     'Data Type' => 'DataType',
+                                                                     'String' => 'String',
+                                                                     'Pattern' => 'Others',
+                                                                     'Function' => 'Function',
+                                                                     'Pattern Character Class' => 'BaseN',
+                                                                     'Operator' => 'Operator',
+                                                                     'Pragma' => 'Keyword',
+                                                                     'Keyword' => 'Keyword',
+                                                                     'Float' => 'Float',
+                                                                     'Comment' => 'Comment',
+                                                                     'Pattern Internal Operator' => 'Char',
+                                                                     'Decimal' => 'DecVal',
+                                                                     'String Special Character' => 'Char',
+                                                                     'Special Variable' => 'Variable',
+                                                                     'Normal Text' => 'Normal',
+                                                                     'Nothing' => 'Comment',
+                                                                     'Hex' => 'BaseN',
+                                                                     'Data' => 'Normal',
+                                                                     'Octal' => 'BaseN',
+                                                                     'Pod' => 'Comment'
+                                                                   }
+                                                 }, 'Syntax::Highlight::Engine::Kate::Perl' )
+                              },
+                 'linestart' => 1,
+                 'lists' => {},
+                 'keywordcase' => 1,
+                 'format_table' => {
+                                     'RegionMarker' => [
+                                                         '<font color="#96b9ff"><i>',
+                                                         '</i></font>'
+                                                       ],
+                                     'String' => [
+                                                   '<font color="#ff0000">',
+                                                   '</font>'
+                                                 ],
+                                     'Function' => [
+                                                     '<font color="#007f00">',
+                                                     '</font>'
+                                                   ],
+                                     'Error' => [
+                                                  '<font color="#ff0000"><b><i>',
+                                                  '</i></b></font>'
+                                                ],
+                                     'Alert' => [
+                                                  '<font color="#0000ff">',
+                                                  '</font>'
+                                                ],
+                                     'Operator' => [
+                                                     '<font color="#ffa500">',
+                                                     '</font>'
+                                                   ],
+                                     'DecVal' => [
+                                                   '<font color="#00007f">',
+                                                   '</font>'
+                                                 ],
+                                     'Others' => [
+                                                   '<font color="#b03060">',
+                                                   '</font>'
+                                                 ],
+                                     'Char' => [
+                                                 '<font color="#ff00ff">',
+                                                 '</font>'
+                                               ],
+                                     'Keyword' => [
+                                                    '<b>',
+                                                    '</b>'
+                                                  ],
+                                     'Warning' => [
+                                                    '<font color="#0000ff"><b><i>',
+                                                    '</b></i></font>'
+                                                  ],
+                                     'Float' => [
+                                                  '<font color="#00007f">',
+                                                  '</font>'
+                                                ],
+                                     'Reserved' => [
+                                                     '<font color="#9b30ff"><b>',
+                                                     '</b></font>'
+                                                   ],
+                                     'Comment' => [
+                                                    '<font color="#7f7f7f"><i>',
+                                                    '</i></font>'
+                                                  ],
+                                     'Variable' => [
+                                                     '<font color="#0000ff"><b>',
+                                                     '</b></font>'
+                                                   ],
+                                     'DataType' => [
+                                                     '<font color="#0000ff">',
+                                                     '</font>'
+                                                   ],
+                                     'IString' => [
+                                                    '<font color="#ff0000">',
+                                                    ''
+                                                  ],
+                                     'BString' => [
+                                                    '<font color="#c9a7ff">',
+                                                    '</font>'
+                                                  ],
+                                     'BaseN' => [
+                                                  '<font color="#007f00">',
+                                                  '</font>'
+                                                ],
+                                     'Normal' => [
+                                                   '',
+                                                   ''
+                                                 ]
+                                   },
+                 'snippetattribute' => '',
+                 'language ' => '',
+                 'extensions' => {
+                                   'apache.conf' => [
+                                                      'Apache Configuration'
+                                                    ],
+                                   '*.MAB' => [
+                                                'MAB-DB'
+                                              ],
+                                   '*.lgo' => [
+                                                'de_DE',
+                                                'en_US',
+                                                'nl'
+                                              ],
+                                   '*.h' => [
+                                              'C++',
+                                              'C',
+                                              'ANSI C89',
+                                              'Inform',
+                                              'LPC',
+                                              'Objective-C'
+                                            ],
+                                   ' *.ltx' => [
+                                                 'LaTeX'
+                                               ],
+                                   '*.bib' => [
+                                                'BibTeX'
+                                              ],
+                                   '*.xslt' => [
+                                                 'xslt'
+                                               ],
+                                   '*.rb' => [
+                                               'Ruby'
+                                             ],
+                                   '*.vcg' => [
+                                                'GDL'
+                                              ],
+                                   '*.ex' => [
+                                               'Euphoria'
+                                             ],
+                                   ' *.cls' => [
+                                                 'LaTeX'
+                                               ],
+                                   '*.SRC' => [
+                                                'PicAsm'
+                                              ],
+                                   '*.LOGO' => [
+                                                 'de_DE',
+                                                 'en_US',
+                                                 'nl'
+                                               ],
+                                   '*.logo' => [
+                                                 'de_DE',
+                                                 'en_US',
+                                                 'nl'
+                                               ],
+                                   '*.F90' => [
+                                                'Fortran'
+                                              ],
+                                   '*.uc' => [
+                                               'UnrealScript'
+                                             ],
+                                   '*.eclass' => [
+                                                   'Bash'
+                                                 ],
+                                   '*.cue' => [
+                                                'CUE Sheet'
+                                              ],
+                                   '*.tcl' => [
+                                                'Tcl/Tk'
+                                              ],
+                                   '*.d' => [
+                                              'D'
+                                            ],
+                                   '*.vhd' => [
+                                                'VHDL'
+                                              ],
+                                   '*.f90' => [
+                                                'Fortran'
+                                              ],
+                                   '*.glsl' => [
+                                                 'GLSL'
+                                               ],
+                                   '*.lhs' => [
+                                                'Literate Haskell'
+                                              ],
+                                   '*.ch' => [
+                                               'xHarbour',
+                                               'Clipper'
+                                             ],
+                                   '*.pot' => [
+                                                'GNU Gettext'
+                                              ],
+                                   '*.rex' => [
+                                                'REXX'
+                                              ],
+                                   '*.not' => [
+                                                'Music Publisher'
+                                              ],
+                                   '*.hsp' => [
+                                                'Spice'
+                                              ],
+                                   '*.bash' => [
+                                                 'Bash'
+                                               ],
+                                   '*.VCG' => [
+                                                'GDL'
+                                              ],
+                                   ' *.sty' => [
+                                                 'LaTeX'
+                                               ],
+                                   '*.pb' => [
+                                               'PureBasic'
+                                             ],
+                                   '*makefile*' => [
+                                                     'Makefile'
+                                                   ],
+                                   '*.dox' => [
+                                                'Doxygen'
+                                              ],
+                                   'apache2.conf' => [
+                                                       'Apache Configuration'
+                                                     ],
+                                   '*.pov' => [
+                                                'POV-Ray'
+                                              ],
+                                   'QRPGLESRC.*' => [
+                                                      'ILERPG'
+                                                    ],
+                                   '*.cgis' => [
+                                                 'CGiS'
+                                               ],
+                                   '*.pas' => [
+                                                'Pascal'
+                                              ],
+                                   '*.asm' => [
+                                                'AVR Assembler',
+                                                'Asm6502',
+                                                'Intel x86 (NASM)',
+                                                'PicAsm'
+                                              ],
+                                   '*.FPP' => [
+                                                'Fortran'
+                                              ],
+                                   '*.gdl' => [
+                                                'GDL'
+                                              ],
+                                   '*.sce' => [
+                                                'scilab'
+                                              ],
+                                   '*.cfml' => [
+                                                 'ColdFusion'
+                                               ],
+                                   '*.reg' => [
+                                                'WINE Config'
+                                              ],
+                                   '*.cl' => [
+                                               'Common Lisp'
+                                             ],
+                                   '*.bro' => [
+                                                'Component-Pascal'
+                                              ],
+                                   '*.basetest' => [
+                                                     'BaseTest'
+                                                   ],
+                                   '*.lsp' => [
+                                                'Common Lisp'
+                                              ],
+                                   '*.PER' => [
+                                                '4GL-PER'
+                                              ],
+                                   '*.cpp' => [
+                                                'C++'
+                                              ],
+                                   '*.ldif' => [
+                                                 'LDIF'
+                                               ],
+                                   '*.idl' => [
+                                                'IDL'
+                                              ],
+                                   '*.v' => [
+                                              'Verilog'
+                                            ],
+                                   '*.lex' => [
+                                                'Lex/Flex'
+                                              ],
+                                   '*.fe' => [
+                                               'ferite'
+                                             ],
+                                   '*.PRG' => [
+                                                'xHarbour',
+                                                'Clipper'
+                                              ],
+                                   '*.guile' => [
+                                                  'Scheme'
+                                                ],
+                                   '*.S' => [
+                                              'GNU Assembler'
+                                            ],
+                                   '*.shtm' => [
+                                                 'HTML'
+                                               ],
+                                   '*.F' => [
+                                              'Fortran'
+                                            ],
+                                   '*.hxx' => [
+                                                'C++'
+                                              ],
+                                   '*.4GL' => [
+                                                '4GL'
+                                              ],
+                                   '*.per' => [
+                                                '4GL-PER'
+                                              ],
+                                   '*.hs' => [
+                                               'Haskell'
+                                             ],
+                                   '*.f' => [
+                                              'Fortran'
+                                            ],
+                                   '*.vhdl' => [
+                                                 'VHDL'
+                                               ],
+                                   '*.eml' => [
+                                                'Email'
+                                              ],
+                                   '*.exw' => [
+                                                'Euphoria'
+                                              ],
+                                   '*.exu' => [
+                                                'Euphoria'
+                                              ],
+                                   '*.tk' => [
+                                               'Tcl/Tk'
+                                             ],
+                                   '*.pike' => [
+                                                 'Pike'
+                                               ],
+                                   '*.tex' => [
+                                                'LaTeX'
+                                              ],
+                                   '*.spec' => [
+                                                 'RPM Spec'
+                                               ],
+                                   '*.rdf' => [
+                                                'XML'
+                                              ],
+                                   '*.siv' => [
+                                                'Sieve'
+                                              ],
+                                   '*.cs' => [
+                                               'C#'
+                                             ],
+                                   '*.inf' => [
+                                                'Inform'
+                                              ],
+                                   '*.C' => [
+                                              'C++',
+                                              'C',
+                                              'ANSI C89'
+                                            ],
+                                   'ChangeLog' => [
+                                                    'ChangeLog'
+                                                  ],
+                                   '*.w' => [
+                                              'progress'
+                                            ],
+                                   '*.phtm' => [
+                                                 'PHP (HTML)'
+                                               ],
+                                   '*.html' => [
+                                                 'HTML',
+                                                 'Mason'
+                                               ],
+                                   '*.H' => [
+                                              'C++'
+                                            ],
+                                   '*.PIC' => [
+                                                'PicAsm'
+                                              ],
+                                   '*.p' => [
+                                              'Pascal',
+                                              'progress'
+                                            ],
+                                   '*.abc' => [
+                                                'ABC'
+                                              ],
+                                   '*.lgt' => [
+                                                'Logtalk'
+                                              ],
+                                   '*.shtml' => [
+                                                  'HTML'
+                                                ],
+                                   '*.kdelnk' => [
+                                                   '.desktop'
+                                                 ],
+                                   '*.katetemplate' => [
+                                                         'Kate File Template'
+                                                       ],
+                                   '*.mli' => [
+                                                'Objective Caml'
+                                              ],
+                                   '*.do' => [
+                                               'Stata'
+                                             ],
+                                   '*.php' => [
+                                                'PHP (HTML)'
+                                              ],
+                                   '*.FOR' => [
+                                                'Fortran'
+                                              ],
+                                   '*.pp' => [
+                                               'Pascal'
+                                             ],
+                                   '*.Logo' => [
+                                                 'de_DE',
+                                                 'en_US',
+                                                 'nl'
+                                               ],
+                                   '*.ahdl' => [
+                                                 'AHDL'
+                                               ],
+                                   '*.m' => [
+                                              'Matlab',
+                                              'Objective-C',
+                                              'Octave'
+                                            ],
+                                   '*.cg' => [
+                                               'Cg'
+                                             ],
+                                   '*.h++' => [
+                                                'C++'
+                                              ],
+                                   '*.y' => [
+                                              'Yacc/Bison'
+                                            ],
+                                   '*.py' => [
+                                               'Python'
+                                             ],
+                                   '*.frag' => [
+                                                 'GLSL'
+                                               ],
+                                   '*.xml' => [
+                                                'XML'
+                                              ],
+                                   '*.ps' => [
+                                               'PostScript'
+                                             ],
+                                   '*.vl' => [
+                                               'Verilog'
+                                             ],
+                                   '*.ini' => [
+                                                'INI Files'
+                                              ],
+                                   '*.jsp' => [
+                                                'JSP'
+                                              ],
+                                   '*.dbm' => [
+                                                'ColdFusion'
+                                              ],
+                                   '*.sql' => [
+                                                'SQL',
+                                                'SQL (MySQL)',
+                                                'SQL (PostgreSQL)'
+                                              ],
+                                   '*.cfg' => [
+                                                'Quake Script'
+                                              ],
+                                   'httpd2.conf' => [
+                                                      'Apache Configuration'
+                                                    ],
+                                   '*.ABC' => [
+                                                'ABC'
+                                              ],
+                                   '*.hcc' => [
+                                                'C++'
+                                              ],
+                                   '*.F95' => [
+                                                'Fortran'
+                                              ],
+                                   '*.prolog' => [
+                                                   'Prolog'
+                                                 ],
+                                   '*.flex' => [
+                                                 'Lex/Flex'
+                                               ],
+                                   '*.i' => [
+                                              'progress'
+                                            ],
+                                   '*patch' => [
+                                                 'Diff'
+                                               ],
+                                   '*.sml' => [
+                                                'SML'
+                                              ],
+                                   '*.m3u' => [
+                                                'M3U'
+                                              ],
+                                   '*.Mab' => [
+                                                'MAB-DB'
+                                              ],
+                                   '*.phtml' => [
+                                                  'PHP (HTML)'
+                                                ],
+                                   '*.mod' => [
+                                                'Modula-2'
+                                              ],
+                                   '*.tst' => [
+                                                'BaseTestchild'
+                                              ],
+                                   '*.per.err' => [
+                                                    '4GL-PER'
+                                                  ],
+                                   '*.lua' => [
+                                                'Lua'
+                                              ],
+                                   '*.sp' => [
+                                               'Spice'
+                                             ],
+                                   '*.D' => [
+                                              'D'
+                                            ],
+                                   '*.java' => [
+                                                 'Java'
+                                               ],
+                                   '*.kbasic' => [
+                                                   'KBasic'
+                                                 ],
+                                   '*.tdf' => [
+                                                'AHDL'
+                                              ],
+                                   '*.lisp' => [
+                                                 'Common Lisp'
+                                               ],
+                                   '*.rc' => [
+                                               'XML'
+                                             ],
+                                   '*.docbook' => [
+                                                    'XML'
+                                                  ],
+                                   '*.rib' => [
+                                                'RenderMan RIB'
+                                              ],
+                                   '*.a' => [
+                                              'Ada'
+                                            ],
+                                   '*.BI' => [
+                                               'FreeBASIC'
+                                             ],
+                                   '*.po' => [
+                                               'GNU Gettext'
+                                             ],
+                                   '*.md' => [
+                                               'Modula-2'
+                                             ],
+                                   '*.e' => [
+                                              'E Language',
+                                              'Eiffel',
+                                              'Euphoria'
+                                            ],
+                                   '*.R' => [
+                                              'R Script'
+                                            ],
+                                   '*.prg' => [
+                                                'xHarbour',
+                                                'Clipper'
+                                              ],
+                                   '*.php3' => [
+                                                 'PHP (HTML)'
+                                               ],
+                                   '*.htm' => [
+                                                'HTML'
+                                              ],
+                                   '*.asp' => [
+                                                'ASP'
+                                              ],
+                                   '*.tji' => [
+                                                'TaskJuggler'
+                                              ],
+                                   '*.ada' => [
+                                                'Ada'
+                                              ],
+                                   '*.bas' => [
+                                                'FreeBASIC'
+                                              ],
+                                   '*.fpp' => [
+                                                'Fortran'
+                                              ],
+                                   '*.vert' => [
+                                                 'GLSL'
+                                               ],
+                                   '*.asm-avr' => [
+                                                    'AVR Assembler'
+                                                  ],
+                                   '*.JSP' => [
+                                                'JSP'
+                                              ],
+                                   '*.sh' => [
+                                               'Bash'
+                                             ],
+                                   '*.c++' => [
+                                                'C++'
+                                              ],
+                                   '*.inc' => [
+                                                'POV-Ray',
+                                                'PHP (HTML)',
+                                                'LPC'
+                                              ],
+                                   'xorg.conf' => [
+                                                    'x.org Configuration'
+                                                  ],
+                                   '*.pyw' => [
+                                                'Python'
+                                              ],
+                                   '*.cxx' => [
+                                                'C++'
+                                              ],
+                                   '*.wml' => [
+                                                'PHP (HTML)'
+                                              ],
+                                   '*.pm' => [
+                                               'Perl'
+                                             ],
+                                   '*.tjp' => [
+                                                'TaskJuggler'
+                                              ],
+                                   '*.mi' => [
+                                               'Modula-2'
+                                             ],
+                                   '*.err' => [
+                                                '4GL'
+                                              ],
+                                   '*.pls' => [
+                                                'INI Files'
+                                              ],
+                                   '*.ml' => [
+                                               'Objective Caml',
+                                               'SML'
+                                             ],
+                                   '*.M' => [
+                                              'Matlab',
+                                              'Octave'
+                                            ],
+                                   '*.ans' => [
+                                                'Ansys'
+                                              ],
+                                   '*.hpp' => [
+                                                'C++'
+                                              ],
+                                   '*.sgml' => [
+                                                 'SGML'
+                                               ],
+                                   '*.s' => [
+                                              'GNU Assembler',
+                                              'MIPS Assembler'
+                                            ],
+                                   '*.SQL' => [
+                                                'SQL',
+                                                'SQL (MySQL)',
+                                                'SQL (PostgreSQL)'
+                                              ],
+                                   '*.BAS' => [
+                                                'FreeBASIC'
+                                              ],
+                                   '*.t2t' => [
+                                                'txt2tags'
+                                              ],
+                                   '*.css' => [
+                                                'CSS'
+                                              ],
+                                   '*.ht' => [
+                                               'Apache Configuration'
+                                             ],
+                                   '*.for' => [
+                                                'Fortran'
+                                              ],
+                                   '*.moc' => [
+                                                'C++'
+                                              ],
+                                   '*.V' => [
+                                              'Verilog'
+                                            ],
+                                   '*.desktop' => [
+                                                    '.desktop'
+                                                  ],
+                                   '*.config' => [
+                                                   'Logtalk'
+                                                 ],
+                                   '*.ebuild' => [
+                                                   'Bash'
+                                                 ],
+                                   '*.scheme' => [
+                                                   'Scheme'
+                                                 ],
+                                   '*.adb' => [
+                                                'Ada'
+                                              ],
+                                   '*.eps' => [
+                                                'PostScript'
+                                              ],
+                                   '*.diff' => [
+                                                 'Diff'
+                                               ],
+                                   '*.octave' => [
+                                                   'Octave'
+                                                 ],
+                                   '*.bi' => [
+                                               'FreeBASIC'
+                                             ],
+                                   '*.def' => [
+                                                'Modula-2'
+                                              ],
+                                   '*.ai' => [
+                                               'PostScript'
+                                             ],
+                                   ' *.dtx' => [
+                                                 'LaTeX'
+                                               ],
+                                   '*.pl' => [
+                                               'Perl'
+                                             ],
+                                   '*.pic' => [
+                                                'PicAsm'
+                                              ],
+                                   '*.cmake' => [
+                                                  'CMake'
+                                                ],
+                                   'CMakeLists.txt' => [
+                                                         'CMake'
+                                                       ],
+                                   '*.ss' => [
+                                               'Scheme'
+                                             ],
+                                   '*.sa' => [
+                                               'Sather'
+                                             ],
+                                   '*.mup' => [
+                                                'Music Publisher'
+                                              ],
+                                   '*.LY' => [
+                                               'LilyPond'
+                                             ],
+                                   '*.GDL' => [
+                                                'GDL'
+                                              ],
+                                   '*.ly' => [
+                                               'LilyPond'
+                                             ],
+                                   '*.cfm' => [
+                                                'ColdFusion'
+                                              ],
+                                   '*Makefile*' => [
+                                                     'Makefile'
+                                                   ],
+                                   '*.4gl' => [
+                                                '4GL'
+                                              ],
+                                   '*.ASM' => [
+                                                'AVR Assembler',
+                                                'PicAsm'
+                                              ],
+                                   '*.cc' => [
+                                               'C++'
+                                             ],
+                                   'httpd.conf' => [
+                                                     'Apache Configuration'
+                                                   ],
+                                   '*.wrl' => [
+                                                'VRML'
+                                              ],
+                                   '*.mab' => [
+                                                'MAB-DB'
+                                              ],
+                                   '*.ads' => [
+                                                'Ada'
+                                              ],
+                                   '*.src' => [
+                                                'PicAsm'
+                                              ],
+                                   '*.pro' => [
+                                                'RSI IDL'
+                                              ],
+                                   '*.feh' => [
+                                                'ferite'
+                                              ],
+                                   '*.doxygen' => [
+                                                    'Doxygen'
+                                                  ],
+                                   '*.vm' => [
+                                               'Velocity'
+                                             ],
+                                   '*.scm' => [
+                                                'Scheme'
+                                              ],
+                                   '*.xsl' => [
+                                                'xslt'
+                                              ],
+                                   '*.o' => [
+                                              'LPC'
+                                            ],
+                                   '*.f95' => [
+                                                'Fortran'
+                                              ],
+                                   '*.sci' => [
+                                                'scilab'
+                                              ],
+                                   '*.cfc' => [
+                                                'ColdFusion'
+                                              ],
+                                   '*.l' => [
+                                              'Lex/Flex'
+                                            ],
+                                   '*.cp' => [
+                                               'Component-Pascal'
+                                             ],
+                                   '*.c' => [
+                                              'C',
+                                              'ANSI C89',
+                                              'LPC'
+                                            ],
+                                   '*.awk' => [
+                                                'AWK'
+                                              ],
+                                   '*.ys' => [
+                                               'yacas'
+                                             ],
+                                   '*.js' => [
+                                               'JavaScript'
+                                             ],
+                                   '*.ado' => [
+                                                'Stata'
+                                              ],
+                                   '*.daml' => [
+                                                 'XML'
+                                               ],
+                                   '*.cis' => [
+                                                'Cisco'
+                                              ]
+                                 },
+                 'linesegment' => '',
+                 'captured' => [],
+                 'substitutions' => {
+                                      '	' => '&nbsp;&nbsp;&nbsp;',
+                                      ' ' => '&nbsp;',
+                                      '&' => '&amp;',
+                                      '>' => '&gt;',
+                                      '<' => '&lt;',
+                                      '
+' => '<BR>
+'
+                                    },
+                 'debug' => 0,
+                 'sections' => {
+                                 'Database' => [
+                                                 '4GL',
+                                                 '4GL-PER',
+                                                 'LDIF',
+                                                 'SQL',
+                                                 'SQL (MySQL)',
+                                                 'SQL (PostgreSQL)',
+                                                 'progress'
+                                               ],
+                                 'Hardware' => [
+                                                 'AHDL',
+                                                 'Spice',
+                                                 'VHDL',
+                                                 'Verilog'
+                                               ],
+                                 'Configuration' => [
+                                                      '.desktop',
+                                                      'Apache Configuration',
+                                                      'Cisco',
+                                                      'INI Files',
+                                                      'WINE Config',
+                                                      'x.org Configuration'
+                                                    ],
+                                 'Scripts' => [
+                                                'AWK',
+                                                'Bash',
+                                                'Common Lisp',
+                                                'Euphoria',
+                                                'JavaScript',
+                                                'Lua',
+                                                'Mason',
+                                                'PHP (HTML)',
+                                                'PHP/PHP',
+                                                'Perl',
+                                                'Pike',
+                                                'Python',
+                                                'Quake Script',
+                                                'R Script',
+                                                'REXX',
+                                                'Ruby',
+                                                'Scheme',
+                                                'Sieve',
+                                                'TaskJuggler',
+                                                'Tcl/Tk',
+                                                'UnrealScript',
+                                                'Velocity',
+                                                'ferite'
+                                              ],
+                                 'Markup' => [
+                                               'ASP',
+                                               'BibTeX',
+                                               'CSS',
+                                               'ColdFusion',
+                                               'Doxygen',
+                                               'GNU Gettext',
+                                               'HTML',
+                                               'JSP',
+                                               'Javadoc',
+                                               'Kate File Template',
+                                               'LaTeX',
+                                               'MAB-DB',
+                                               'PostScript',
+                                               'SGML',
+                                               'VRML',
+                                               'Wikimedia',
+                                               'XML',
+                                               'txt2tags',
+                                               'xslt'
+                                             ],
+                                 'Sources' => [
+                                                'ANSI C89',
+                                                'Ada',
+                                                'C',
+                                                'C#',
+                                                'C++',
+                                                'CGiS',
+                                                'Cg',
+                                                'Clipper',
+                                                'Component-Pascal',
+                                                'D',
+                                                'E Language',
+                                                'Eiffel',
+                                                'Fortran',
+                                                'FreeBASIC',
+                                                'GLSL',
+                                                'Haskell',
+                                                'IDL',
+                                                'ILERPG',
+                                                'Inform',
+                                                'Java',
+                                                'KBasic',
+                                                'LPC',
+                                                'Lex/Flex',
+                                                'Literate Haskell',
+                                                'Logtalk',
+                                                'Modula-2',
+                                                'Objective Caml',
+                                                'Objective-C',
+                                                'Pascal',
+                                                'Prolog',
+                                                'PureBasic',
+                                                'RSI IDL',
+                                                'SML',
+                                                'Sather',
+                                                'Stata',
+                                                'Yacc/Bison',
+                                                'xHarbour',
+                                                'yacas'
+                                              ],
+                                 'Other' => [
+                                              'ABC',
+                                              'Alerts',
+                                              'CMake',
+                                              'CSS/PHP',
+                                              'CUE Sheet',
+                                              'ChangeLog',
+                                              'Debian Changelog',
+                                              'Debian Control',
+                                              'Diff',
+                                              'Email',
+                                              'JavaScript/PHP',
+                                              'LilyPond',
+                                              'M3U',
+                                              'Makefile',
+                                              'Music Publisher',
+                                              'POV-Ray',
+                                              'RPM Spec',
+                                              'RenderMan RIB'
+                                            ],
+                                 'Scientific' => [
+                                                   'GDL',
+                                                   'Matlab',
+                                                   'Octave',
+                                                   'TI Basic',
+                                                   'scilab'
+                                                 ],
+                                 'Test' => [
+                                             'BaseTest',
+                                             'BaseTestchild'
+                                           ],
+                                 'Logo' => [
+                                             'de_DE',
+                                             'en_US',
+                                             'nl'
+                                           ],
+                                 'Script' => [
+                                               'Ansys'
+                                             ],
+                                 'Assembler' => [
+                                                  'AVR Assembler',
+                                                  'Asm6502',
+                                                  'GNU Assembler',
+                                                  'Intel x86 (NASM)',
+                                                  'MIPS Assembler',
+                                                  'PicAsm'
+                                                ]
+                               },
+                 'out' => [],
+                 'snippet' => '',
+                 'language' => 'Perl',
+                 'stack' => [
+                              [
+                                $VAR1->{'plugins'}{'Perl'},
+                                'normal'
+                              ]
+                            ],
+                 'lastchar' => '',
+                 'basecontext' => '',
+                 'syntaxes' => {
+                                 'txt2tags' => 'Txt2tags',
+                                 'RenderMan RIB' => 'RenderMan_RIB',
+                                 'Haskell' => 'Haskell',
+                                 'CSS' => 'CSS',
+                                 'Ada' => 'Ada',
+                                 'Doxygen' => 'Doxygen',
+                                 'Matlab' => 'Matlab',
+                                 'JavaScript/PHP' => 'JavaScript_PHP',
+                                 'AWK' => 'AWK',
+                                 'UnrealScript' => 'UnrealScript',
+                                 'VRML' => 'VRML',
+                                 'ferite' => 'Ferite',
+                                 'BaseTest' => 'BaseTest',
+                                 'Velocity' => 'Velocity',
+                                 'Kate File Template' => 'Kate_File_Template',
+                                 'E Language' => 'E_Language',
+                                 'D' => 'D',
+                                 'RPM Spec' => 'RPM_Spec',
+                                 'Debian Control' => 'Debian_Control',
+                                 '4GL' => 'FourGL',
+                                 'TaskJuggler' => 'TaskJuggler',
+                                 'R Script' => 'R_Script',
+                                 'TI Basic' => 'TI_Basic',
+                                 'POV-Ray' => 'POVminusRay',
+                                 'Literate Haskell' => 'Literate_Haskell',
+                                 'GNU Assembler' => 'GNU_Assembler',
+                                 'Pike' => 'Pike',
+                                 'Cg' => 'Cg',
+                                 'Alerts' => 'Alerts',
+                                 'C' => 'C',
+                                 'PHP/PHP' => 'PHP_PHP',
+                                 'LPC' => 'LPC',
+                                 'Octave' => 'Octave',
+                                 'Lex/Flex' => 'Lex_Flex',
+                                 'progress' => 'Progress',
+                                 'SML' => 'SML',
+                                 'Sather' => 'Sather',
+                                 'MIPS Assembler' => 'MIPS_Assembler',
+                                 'Yacc/Bison' => 'Yacc_Bison',
+                                 'Mason' => 'Mason',
+                                 'MAB-DB' => 'MABminusDB',
+                                 'KBasic' => 'KBasic',
+                                 'Javadoc' => 'Javadoc',
+                                 'Objective Caml' => 'Objective_Caml',
+                                 'M3U' => 'M3U',
+                                 'Debian Changelog' => 'Debian_Changelog',
+                                 'SQL (PostgreSQL)' => 'SQL_PostgreSQL',
+                                 'Clipper' => 'Clipper',
+                                 'Eiffel' => 'Eiffel',
+                                 'INI Files' => 'INI_Files',
+                                 'x.org Configuration' => 'Xorg_Configuration',
+                                 'CUE Sheet' => 'CUE_Sheet',
+                                 'Verilog' => 'Verilog',
+                                 'Inform' => 'Inform',
+                                 'Makefile' => 'Makefile',
+                                 'Email' => 'Email',
+                                 'Java' => 'Java',
+                                 'C#' => 'Cdash',
+                                 'ChangeLog' => 'ChangeLog',
+                                 'Perl' => 'Perl',
+                                 'CGiS' => 'CGiS',
+                                 'Quake Script' => 'Quake_Script',
+                                 'PicAsm' => 'PicAsm',
+                                 'SQL (MySQL)' => 'SQL_MySQL',
+                                 'JavaScript' => 'JavaScript',
+                                 'Cisco' => 'Cisco',
+                                 'HTML' => 'HTML',
+                                 'SQL' => 'SQL',
+                                 'PHP (HTML)' => 'PHP_HTML',
+                                 'PostScript' => 'PostScript',
+                                 'CMake' => 'CMake',
+                                 'Stata' => 'Stata',
+                                 'Python' => 'Python',
+                                 'CSS/PHP' => 'CSS_PHP',
+                                 '.desktop' => 'Desktop',
+                                 'en_US' => 'En_US',
+                                 'yacas' => 'Yacas',
+                                 'Ansys' => 'Ansys',
+                                 '4GL-PER' => 'FourGLminusPER',
+                                 'RSI IDL' => 'RSI_IDL',
+                                 'VHDL' => 'VHDL',
+                                 'AVR Assembler' => 'AVR_Assembler',
+                                 'ColdFusion' => 'ColdFusion',
+                                 'Scheme' => 'Scheme',
+                                 'AHDL' => 'AHDL',
+                                 'SGML' => 'SGML',
+                                 'Intel x86 (NASM)' => 'Intel_x86_NASM',
+                                 'BaseTestchild' => 'BaseTestchild',
+                                 'Logtalk' => 'Logtalk',
+                                 'ASP' => 'ASP',
+                                 'GDL' => 'GDL',
+                                 'REXX' => 'REXX',
+                                 'Ruby' => 'Ruby',
+                                 'IDL' => 'IDL',
+                                 'Prolog' => 'Prolog',
+                                 'XML' => 'XML',
+                                 'Sieve' => 'Sieve',
+                                 'FreeBASIC' => 'FreeBASIC',
+                                 'Music Publisher' => 'Music_Publisher',
+                                 'BibTeX' => 'BibTeX',
+                                 'LaTeX' => 'LaTeX',
+                                 'Fortran' => 'Fortran',
+                                 'C++' => 'Cplusplus',
+                                 'Component-Pascal' => 'ComponentminusPascal',
+                                 'JSP' => 'JSP',
+                                 'Wikimedia' => 'Wikimedia',
+                                 'Modula-2' => 'Modulaminus2',
+                                 'LilyPond' => 'LilyPond',
+                                 'xHarbour' => 'XHarbour',
+                                 'xslt' => 'Xslt',
+                                 'scilab' => 'Scilab',
+                                 'Apache Configuration' => 'Apache_Configuration',
+                                 'Tcl/Tk' => 'Tcl_Tk',
+                                 'GNU Gettext' => 'GNU_Gettext',
+                                 'Pascal' => 'Pascal',
+                                 'Asm6502' => 'Asm6502',
+                                 'ILERPG' => 'ILERPG',
+                                 'ABC' => 'ABC',
+                                 'PureBasic' => 'PureBasic',
+                                 'Common Lisp' => 'Common_Lisp',
+                                 'Objective-C' => 'ObjectiveminusC',
+                                 'Diff' => 'Diff',
+                                 'GLSL' => 'GLSL',
+                                 'Euphoria' => 'Euphoria',
+                                 'Lua' => 'Lua',
+                                 'nl' => 'Nl',
+                                 'LDIF' => 'LDIF',
+                                 'Bash' => 'Bash',
+                                 'ANSI C89' => 'ANSI_C89',
+                                 'Spice' => 'Spice',
+                                 'WINE Config' => 'WINE_Config',
+                                 'de_DE' => 'De_DE'
+                               },
+                 'engine' => $VAR1,
+                 'contextdata' => {},
+                 'deliminators' => '',
+                 'attributes' => {}
+               }, 'Syntax::Highlight::Engine::Kate' );

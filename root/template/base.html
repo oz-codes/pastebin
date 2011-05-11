@@ -1,0 +1,39 @@
+[% IF c.request.is_xhr || xhr == 1 || NO_WRAPPER == 1 %]
+[% content %]
+[% ELSE %]
+<?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	    <head>
+		    <title>[% template.title or "pastebin" %]</title>
+		    <link rel="stylesheet" href="[% c.uri_for('/static/css/ext-all.css') %]" />
+		    <link rel="stylesheet" href="[% c.uri_for("/static/css/screen.css") %]" media="screen, projection" type="text/css" />
+		    <link rel="stylesheet" href="/static/js/extjs/resources/css/ext-standard.css" />
+		    <link rel="stylesheet" href="/static/css/main.css" />
+
+		    <script src="[% c.uri_for('/static/js/extjs/ext.js') %]"></script>
+		    <script src="[% c.uri_for('/static/js/extjs/ext-all.js') %]"></script>
+		    <script type="text/javascript" src="/api/src"></script>
+		    <script type="text/javascript">
+			Ext.Direct.addProvider(Ext.app.REMOTING_API);
+		    </script>
+		
+	    </head>
+    
+	    <body>
+	    <div id="outer">
+		    <div id="bodyblock">[% content %]
+			    <div class="messages">
+				<span class="message">[% status_msg %]</span>
+				<span class="error">[% error_msg %]</span>
+			   </div>
+		</div><!-- end bodyblock -->
+    
+		<div id="footer">
+			<div id="copyright"></div>
+		</div>
+	    </div><!-- end outer -->
+		<script src="/static/js/load.js"></script>	
+		</body>
+    </html>
+[% END %]
