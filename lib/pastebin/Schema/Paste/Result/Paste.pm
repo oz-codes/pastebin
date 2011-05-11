@@ -28,6 +28,7 @@ __PACKAGE__->table("pastes");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
+  sequence: 'pastes_id_seq'
 
 =head2 title
 
@@ -52,23 +53,32 @@ __PACKAGE__->table("pastes");
   is_nullable: 1
   size: 20
 
+=head2 user_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 created_on
 
-  data_type: 'datetime'
-  datetime_undef_if_invalid: 1
-  is_nullable: 0
+  data_type: 'timestamp'
+  is_nullable: 1
 
 =head2 updated_on
 
-  data_type: 'datetime'
-  datetime_undef_if_invalid: 1
+  data_type: 'timestamp'
   is_nullable: 1
 
 =cut
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "pastes_id_seq",
+  },
   "title",
   { data_type => "char", is_nullable => 1, size => 64 },
   "content",
@@ -77,18 +87,12 @@ __PACKAGE__->add_columns(
   { data_type => "char", is_nullable => 1, size => 16 },
   "poster",
   { data_type => "char", is_nullable => 1, size => 20 },
+  "user_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "created_on",
-  {
-    data_type => "datetime",
-    datetime_undef_if_invalid => 1,
-    is_nullable => 0,
-  },
+  { data_type => "timestamp", is_nullable => 1 },
   "updated_on",
-  {
-    data_type => "datetime",
-    datetime_undef_if_invalid => 1,
-    is_nullable => 1,
-  },
+  { data_type => "timestamp", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -109,21 +113,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 forks
-
-Type: has_many
-
-Related object: L<pastebin::Schema::Paste::Result::Fork>
-
-=cut
-
-__PACKAGE__->has_many(
-  "forks",
-  "pastebin::Schema::Paste::Result::Fork",
-  { "foreign.paste_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 forks_fork
 
 Type: has_many
@@ -137,6 +126,41 @@ __PACKAGE__->has_many(
   "pastebin::Schema::Paste::Result::Fork",
   { "foreign.fork_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 forks_pastes
+
+Type: has_many
+
+Related object: L<pastebin::Schema::Paste::Result::Fork>
+
+=cut
+
+__PACKAGE__->has_many(
+  "forks_pastes",
+  "pastebin::Schema::Paste::Result::Fork",
+  { "foreign.paste_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user
+
+Type: belongs_to
+
+Related object: L<pastebin::Schema::Paste::Result::User>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "user",
+  "pastebin::Schema::Paste::Result::User",
+  { id => "user_id" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
 );
 
 =head2 revisions
@@ -170,8 +194,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-10 16:59:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/CcDU05kvKUZvwkPPoOgog
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-11 14:33:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AkwROOksO9goqQX+ZIyQwA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

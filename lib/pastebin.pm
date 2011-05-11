@@ -21,13 +21,15 @@ use Catalyst qw/
     ConfigLoader
     Static::Simple
 
-    Authentication
     Email
     Observe
+
+    Authentication
 
     Session
     Session::Store::FastMmap
     Session::State::Cookie
+
 /;
 use Data::Dumper;
 use CatalystX::RoleApplicator;
@@ -52,9 +54,9 @@ __PACKAGE__->config(
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
 );
-    __PACKAGE__->apply_request_class_roles(qw(
-        Catalyst::TraitFor::Request::XMLHttpRequest
-    ));
+   # __PACKAGE__->apply_request_class_roles(qw(
+   #     Catalyst::TraitFor::Request::XMLHttpRequest
+   # ));
 
 
 
@@ -63,54 +65,13 @@ __PACKAGE__->config->{'Plugin::Authentication'} = {
 		class		=>	'SimpleDB',
 		user_model	=>	'Paste::user',
 		password_type	=>	'clear'
-	}
+	},
 };
 
 
 # Start the application
 __PACKAGE__->setup();
 
-sub dispatch_hook {
-        my ( $c, $event, @args ) = @_;
-	my $kate =  new Syntax::Highlight::Engine::Kate(
-		    language => 'Perl',
-		    substitutions => {
-		       "<" => "&lt;",
-		       ">" => "&gt;",
-		       "&" => "&amp;",
-		       " " => "&nbsp;",
-		       "\t" => "&nbsp;&nbsp;&nbsp;",
-		       "\n" => "<BR>\n",
-		    },
-		    format_table => {
-		       Alert => ["<font color=\"#0000ff\">", "</font>"],
-		       BaseN => ["<font color=\"#007f00\">", "</font>"],
-		       BString => ["<font color=\"#c9a7ff\">", "</font>"],
-		       Char => ["<font color=\"#ff00ff\">", "</font>"],
-		       Comment => ["<font color=\"#7f7f7f\"><i>", "</i></font>"],
-		       DataType => ["<font color=\"#0000ff\">", "</font>"],
-		       DecVal => ["<font color=\"#00007f\">", "</font>"],
-		       Error => ["<font color=\"#ff0000\"><b><i>", "</i></b></font>"],
-		       Float => ["<font color=\"#00007f\">", "</font>"],
-		       Function => ["<font color=\"#007f00\">", "</font>"],
-		       IString => ["<font color=\"#ff0000\">", ""],
-		       Keyword => ["<b>", "</b>"],
-		       Normal => ["", ""],
-		       Operator => ["<font color=\"#ffa500\">", "</font>"],
-		       Others => ["<font color=\"#b03060\">", "</font>"],
-		       RegionMarker => ["<font color=\"#96b9ff\"><i>", "</i></font>"],
-		       Reserved => ["<font color=\"#9b30ff\"><b>", "</b></font>"],
-		       String => ["<font color=\"#ff0000\">", "</font>"],
-		       Variable => ["<font color=\"#0000ff\"><b>", "</b></font>"],
-		       Warning => ["<font color=\"#0000ff\"><b><i>", "</b></i></font>"],
-		    },
-		 );
-	$c->stash->{kate} = $kate;
-	$c->stash->{pastes} = $c->model("Paste::pastes");
-	$c->stash->{forks} = $c->model("Paste::forks");
-}
-
-__PACKAGE__->add_subscriber("finalize",\&dispatch_hook);
 
 =head1 NAME
 

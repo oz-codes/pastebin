@@ -28,6 +28,7 @@ __PACKAGE__->table("users");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
+  sequence: 'users_id_seq'
 
 =head2 username
 
@@ -63,7 +64,12 @@ __PACKAGE__->table("users");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "users_id_seq",
+  },
   "username",
   { data_type => "char", is_nullable => 1, size => 32 },
   "name",
@@ -78,6 +84,21 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
+
+=head2 pastes
+
+Type: has_many
+
+Related object: L<pastebin::Schema::Paste::Result::Paste>
+
+=cut
+
+__PACKAGE__->has_many(
+  "pastes",
+  "pastebin::Schema::Paste::Result::Paste",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 =head2 user_roles
 
@@ -115,19 +136,12 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-10 16:59:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+JyC21ZG89W+hzMpZc6Aeg
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-11 14:33:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4ZGjQqX/X83UWw8NaylyWQ
 
+# Have the 'password' column use a SHA-1 hash and 10-character salt
+    # with hex encoding; Generate the 'check_password" method
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
-
-    # many_to_many():
-    #   args:
-    #     1) Name of relationship, DBIC will create accessor with this name
-    #     2) Name of has_many() relationship this many_to_many() is shortcut for
-    #     3) Name of belongs_to() relationship in model class of has_many() above
-    #   You must already have the has_many() defined to use a many_to_many().
-    __PACKAGE__->many_to_many(roles => 'user_roles', 'role_id');
-
 1;

@@ -7,10 +7,9 @@ __PACKAGE__->config(
     schema_class => 'pastebin::Schema::Paste',
     
     connect_info => {
-        dsn => 'dbi:mysql:pastebin',
-        user => 'pastebin',
-        password => 'user',
-        quote_char => q{`},
+        dsn => 'dbi:Pg:dbname=pastebin',
+        user => 'mxe',
+        password => 'alpha345',
         name_sep => q{.},
     }
 );
@@ -33,7 +32,7 @@ Catalyst::Helper::Model::DBIC::Schema - 0.48
 
 =head1 AUTHOR
 
-A clever guy
+root
 
 =head1 LICENSE
 

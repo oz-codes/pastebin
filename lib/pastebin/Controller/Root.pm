@@ -37,6 +37,11 @@ sub index :Path :Args(0) {
 }
 
 
+sub auto : Path  {
+	my ($self, $c) = @_;
+	$c->session->{"RandomData"} = "random";
+}
+
 
 =cut
 sub auto :Private {

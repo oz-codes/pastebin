@@ -67,7 +67,6 @@ sub languages :Direct {
 	my ( $self, $c ) = @_;
 	my @langs = $kate->syntaxes;
 	
-	warn Dumper(@langs);
 	my $json;
 	my @temp;
 	foreach my $ent (@langs) {
@@ -88,6 +87,8 @@ sub create :Direct :DirectArgs(1)  {
 	my $post = $opts->{post};
 	my $lang = $opts->{lang};
 	my $json;
+	my $id;
+	my $uid;
 	if(!defined $title) {
 		$json = { error => "You did not provide a title.", errno => 1 };
 	} elsif(!defined $post) {
@@ -98,18 +99,26 @@ sub create :Direct :DirectArgs(1)  {
 		$json = { error => "The language you provided does not exist", errno => 4};
 	} else {
 		my $language = $kate->syntaxes->{$lang};
+		chomp($language);
 		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
 		my $datetime = sprintf "%4d-%02d-%02d %02d:%02d:%02d\n",$year+1900,$mon+1,$mday,$hour,$min,$sec;
 		my $db = $c->model("Paste::paste");
+		if(defined $c->session->{"__user"}) {
+			$uid = $c->session->{"__user"}->{"id"};
+		} else {
+			$uid = undef;
+		}
 		my $row = $db->create({
 			title => $title,
 			content => $post,
 			lang => $lang,
 			created_on => $datetime,
 			updated_on => $datetime,
+			user_id	   => $uid
 			});
-		my $id = $row->{_column_data}->{id};
-		$json = { msg => "Your post was successfully made. You can view it using the paste list tab." };
+		$id = $row->{_column_data}->{id};
+		$c->model("Paste::user")->find({id=>$uid})->update({last_paste => $id});
+		$json = { msg => "Your post was successfully made. You can view it using the saved pastes tab." };
 	}
 	$c->res->content_type("application/json");
 	$c->stash(template=>"json/general.json",json=>$json);
@@ -123,7 +132,7 @@ sub pastes :Direct :DirectArgs(1) {
 	my @rs = $c->model("Paste::paste")->search({})->slice($start,$limit);
 	my $json = &jarr(\@rs);
 	$c->res->content_type("application/json");
-	$c->stash(template=>"json/general.json",json=>$json);
+	$c->stash(template=>"json/pastes.json",json=>$json);
 }
 
 
@@ -149,6 +158,7 @@ sub getPaste : Direct : DirectArgs(1) {
 			$json = &jarr(\@row);
 			$json = $json->[0];
 			@content = split /\n/,$json->{content};
+			$json->{lang} =~ s/\s*$//ig;
 			$kate->language($json->{lang});
 			foreach my $line (@content) {
 				$out .= $kate->highlightText($line)."<br />";	

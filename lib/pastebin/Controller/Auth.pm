@@ -29,12 +29,14 @@ Catalyst Controller.
 sub logout :Path("/logout") :Args(0) {
 	my ($self, $c) = @_;
 	$c->logout;
+	$c->_save_session();
 	$c->response->redirect($c->uri_for('/'));
     }
 
 sub out : Direct  {
 	my ( $ self , $c ) = @_;
 	$c->logout;
+	$c->_save_session();
 	$c->res->content_type("application/json");
 	$c->stash(template=>"json/general.json",json=>{msg => "You have been logged out."});
 }
@@ -42,7 +44,6 @@ sub out : Direct  {
 sub in : Direct : DirectArgs(1) {
         my ($self, $c) = @_;
 	my $opts = $c->req->data->[0];
-	warn Dumper($opts);
 	$c->res->content_type("application/json");
         # Get the username and password from form
         my $username = $opts->{username};
@@ -51,8 +52,8 @@ sub in : Direct : DirectArgs(1) {
 
         # If the username and password values were found in form
         if ($username && $password) {
+	    $password = md5_hex($password);
             # Attempt to log the user in
-            $password = md5_hex($password);
             if ($c->authenticate({ username => $username,
                                    password => $password  } )) {
                 # If successful, then let them use the application
@@ -65,17 +66,83 @@ sub in : Direct : DirectArgs(1) {
             # Set an error message
 	    $json = { error => "Empty username or password", errno => 11} unless ($c->user_exists);
         }
+	$c->_save_session();
         $c->stash(template => 'json/general.json',json=>$json);
     }
 
 sub loggedin : Direct : DirectArgs(1) {
 	my ( $self , $c ) = @_;
-	my $li = $c->user_exists;
-	my $json = { logged_in => $li };
+	open my $f, ">session";
+	print $f Dumper($c->session->{__user});
+	close $f;
+	my $checks = (defined $c->session->{checks})?$c->session->{checks}:1;
+	warn "checks = $checks";
+	
+	my $li;
+	if($c->user_exists()) {
+		$li = 1;
+	} else {
+		$li = 0;
+	}		
+	my $json = { loggedin => $li };
 	$c->res->content_type("application/json");
+	$c->session->{checks} = $checks+1;
+	$c->_save_session();
 	$c->stash(template=>"json/general.json", json=>$json);
 }
 
+sub register :Direct :DirectArgs(1) {
+	my ( $self , $c ) = @_;
+	my $opts = $c->req->data->[0];
+	$c->res->content_type("application/json");
+	warn Dumper($opts);
+	my $username = $opts->{username};
+	my ($email, $emailc) = @{$opts->{email}};
+	my ($pass, $passc)   = @{$opts->{password}};
+	my $json;
+	if(!defined $username) {
+		$json = { error => "You did not provide a username.", errno => 20 };
+	}
+	elsif(!defined $email) {
+		$json = { error => "You did not provide an email address.", errno => 21};
+	} 
+	elsif (!defined $emailc) {
+		$json = { error => "You did not provide the email confirmation.", errno => 22};
+	}
+	elsif (!defined $pass) {
+		$json = { error => "You did not provide a password.", errno => 23 };
+	} 
+	elsif(!defined $passc) {
+		$json = { error => "You did not provide the password confirmation", errno => 24 };
+	} elsif( length($username) > 12) {
+		$json = { error => "The username you picked was too long. It should be 12 characters or less.", errno => 25};
+	} elsif( $email ne $emailc ) {
+		$json = { error => "The emails that you provided did not match.", errno => 26 };
+	} elsif( $pass ne $passc   ) {
+		$json = { error => "The passwords that you provided did not match.", errno => 27 };
+	} elsif ( $email !~ /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i ) {
+		$json = { error => "The email address you provided did not appear to be a valid email address.", errno => 28 };
+	} elsif ( $username !~ /[\w\.\-_]{3,12}/ ) {
+		$json = { error => "The username that you provided did not appear to be a valid one.", errno => 29 };
+	} elsif ( length($username) < 3) {
+		$json = { error => "The username you picked was too short. It should be at least 3 characters.", errno=>30};   } 
+	elsif( defined $c->model("Paste::user")->find({email => $email}) ) {
+		$json = { error => "The email address you provided is already in use.", errno => 31 };
+	}
+	elsif( defined $c->model("Paste::user")->find({username => $username}) ) {
+		$json = { error => "The username you picked is already in use.", errno => 32 };
+	}
+	else {
+		$c->model("Paste::user")->create({
+				username => $username,
+				email    => $email,
+				password => md5_hex($pass),
+		});
+		$json = { msg => "Your account was successfully created." };
+	}
+	$c->stash(template=>"json/general.json",json=>$json);
+}
+				
 
 sub login :Path("/login") :Args(0) {
 	my ($self, $c) = @_;
@@ -104,6 +171,7 @@ sub login :Path("/login") :Args(0) {
         }
 
         # If either of above don't work out, send to the login page
+	$c->_save_session();
         $c->stash(template => 'login.html');
     }
 

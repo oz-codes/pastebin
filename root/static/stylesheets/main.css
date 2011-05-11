@@ -1,6 +1,6 @@
-    /*html, body {
+    html, body {
 	overflow: hidden;
-    }*/
+    }
     img.check-in {
 	background-image: url("/static/icons/check-in");
     }

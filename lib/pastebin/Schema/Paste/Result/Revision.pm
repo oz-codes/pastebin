@@ -28,6 +28,7 @@ __PACKAGE__->table("revisions");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
+  sequence: 'revisions_id_seq'
 
 =head2 paste_id
 
@@ -39,7 +40,12 @@ __PACKAGE__->table("revisions");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "revisions_id_seq",
+  },
   "paste_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
@@ -68,8 +74,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-10 16:59:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zQZb3JIMMyWIz9j0wsLR0A
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-11 12:05:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GU2gBxwyzEI82nrEVw7c/A
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
