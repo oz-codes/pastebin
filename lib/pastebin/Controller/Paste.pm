@@ -194,7 +194,7 @@ sub createRev :Direct :DirectArgs(1) {
                 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
                 my $datetime = sprintf "%4d-%02d-%02d %02d:%02d:%02d\n",$year+1900,$mon+1,$mday,$hour,$min,$sec;
                 my $db = $c->model("Paste::paste");
-		my $version = c->model("Paste::revision")->search({paste_id => $oldId});
+		my $version = $c->model("Paste::revision")->search({paste_id => $oldId});
 		$version = defined $version ? $version+1 : 1;
                 if(defined $c->session->{"__user"}) {
                         $uid = $c->session->{"__user"}->{"id"};
