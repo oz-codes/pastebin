@@ -32,7 +32,7 @@ Catalyst::Helper::Model::DBIC::Schema - 0.48
 
 =head1 AUTHOR
 
-root
+A clever guy
 
 =head1 LICENSE
 

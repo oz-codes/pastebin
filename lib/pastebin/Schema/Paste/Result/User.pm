@@ -32,19 +32,19 @@ __PACKAGE__->table("users");
 
 =head2 username
 
-  data_type: 'char'
+  data_type: 'varchar'
   is_nullable: 1
   size: 32
 
 =head2 name
 
-  data_type: 'char'
+  data_type: 'varchar'
   is_nullable: 1
   size: 32
 
 =head2 email
 
-  data_type: 'char'
+  data_type: 'varchar'
   is_nullable: 1
   size: 64
 
@@ -71,11 +71,11 @@ __PACKAGE__->add_columns(
     sequence          => "users_id_seq",
   },
   "username",
-  { data_type => "char", is_nullable => 1, size => 32 },
+  { data_type => "varchar", is_nullable => 1, size => 32 },
   "name",
-  { data_type => "char", is_nullable => 1, size => 32 },
+  { data_type => "varchar", is_nullable => 1, size => 32 },
   "email",
-  { data_type => "char", is_nullable => 1, size => 64 },
+  { data_type => "varchar", is_nullable => 1, size => 64 },
   "password",
   { data_type => "char", is_nullable => 1, size => 32 },
   "last_paste",
@@ -136,11 +136,9 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-11 14:33:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4ZGjQqX/X83UWw8NaylyWQ
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:02:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4WNpm0jHDvAhZAi0BmUaqQ
 
-# Have the 'password' column use a SHA-1 hash and 10-character salt
-    # with hex encoding; Generate the 'check_password" method
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

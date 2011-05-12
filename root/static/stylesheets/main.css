@@ -1,3 +1,10 @@
+    .hidden {
+	display: hidden;
+    }
+    div#ext {
+	width: 100%;
+	height: 100%;
+    }
     html, body {
 	overflow: hidden;
     }

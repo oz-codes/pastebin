@@ -36,6 +36,16 @@ __PACKAGE__->table("revisions");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 version
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 revision_id
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -48,6 +58,10 @@ __PACKAGE__->add_columns(
   },
   "paste_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "version",
+  { data_type => "integer", is_nullable => 1 },
+  "revision_id",
+  { data_type => "integer", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -74,8 +88,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-11 12:05:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GU2gBxwyzEI82nrEVw7c/A
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:02:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Kq5LdyB+jVv7kI1exJWELw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

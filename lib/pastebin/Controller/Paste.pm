@@ -124,6 +124,56 @@ sub create :Direct :DirectArgs(1)  {
 	$c->stash(template=>"json/general.json",json=>$json);
 }
 
+sub createFork :Direct :DirectArgs(1) {
+        my ( $self , $c ) = @_;
+        my $opts = $c->req->data->[0];
+        my $title = $opts->{title};
+        my $post = $opts->{post};
+        my $lang = $opts->{lang};
+	my $oldId = $opts->{oldId};
+        my $json;
+        my $id;
+        my $uid;
+        if(!defined $title) {
+                $json = { error => "You did not provide a title.", errno => 1 };
+        } elsif(!defined $post) {
+                $json = { error => "You did not provide any content.", errno => 2};
+        } elsif(!defined $lang) {
+                $json = { error => "You did not provide a language.", errno => 3};
+        } elsif(!defined $kate->syntaxes->{$lang}) {
+                $json = { error => "The language you provided does not exist", errno => 4};
+	} elsif(!defined $oldId) {
+		$json = { error => "I don't know how you got this message. Seriously.", errno=>-1 };
+        } else {
+                my $language = $kate->syntaxes->{$lang};
+                chomp($language);
+                my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
+                my $datetime = sprintf "%4d-%02d-%02d %02d:%02d:%02d\n",$year+1900,$mon+1,$mday,$hour,$min,$sec;
+                my $db = $c->model("Paste::paste");
+                if(defined $c->session->{"__user"}) {
+                        $uid = $c->session->{"__user"}->{"id"};
+                } else {
+                        $uid = undef;
+                }
+                my $row = $db->create({
+                        title => $title,
+                        content => $post,
+                        lang => $lang,
+                        created_on => $datetime,
+                        updated_on => $datetime,
+                        user_id    => $uid
+                        });
+                $id = $row->{_column_data}->{id};
+		if($c->user_exists) {
+			$c->model("Paste::user")->find({id=>$uid})->update({last_paste => $id});
+		}
+		$c->model("Paste::fork")->create({paste_id => $oldId, fork_id => $id});
+                $json = { msg => "Your post was successfully made. You can view it using the saved pastes tab." };
+        }
+        $c->res->content_type("application/json");
+        $c->stash(template=>"json/general.json",json=>$json);
+}
+
 sub pastes :Direct :DirectArgs(1) {
 	my ( $self, $c) = @_;
 	my $opts = $c->req->data->[0];

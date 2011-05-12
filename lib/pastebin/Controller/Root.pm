@@ -30,6 +30,7 @@ The root page (/)
 
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
+    warn Dumper($c->session->{__user});
     $c->stash(template=>"root/index.html");
 	
 

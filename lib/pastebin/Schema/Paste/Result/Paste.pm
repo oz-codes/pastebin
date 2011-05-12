@@ -43,15 +43,15 @@ __PACKAGE__->table("pastes");
 
 =head2 lang
 
-  data_type: 'char'
+  data_type: 'varchar'
   is_nullable: 1
   size: 16
 
 =head2 poster
 
-  data_type: 'char'
+  data_type: 'varchar'
   is_nullable: 1
-  size: 20
+  size: 16
 
 =head2 user_id
 
@@ -69,6 +69,12 @@ __PACKAGE__->table("pastes");
   data_type: 'timestamp'
   is_nullable: 1
 
+=head2 lang_code
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 64
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -84,15 +90,17 @@ __PACKAGE__->add_columns(
   "content",
   { data_type => "text", is_nullable => 1 },
   "lang",
-  { data_type => "char", is_nullable => 1, size => 16 },
+  { data_type => "varchar", is_nullable => 1, size => 16 },
   "poster",
-  { data_type => "char", is_nullable => 1, size => 20 },
+  { data_type => "varchar", is_nullable => 1, size => 16 },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "created_on",
   { data_type => "timestamp", is_nullable => 1 },
   "updated_on",
   { data_type => "timestamp", is_nullable => 1 },
+  "lang_code",
+  { data_type => "varchar", is_nullable => 1, size => 64 },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -194,8 +202,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-11 14:33:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AkwROOksO9goqQX+ZIyQwA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:02:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uAgOUlGsVQv24eD6zOa3gw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
