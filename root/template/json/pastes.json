@@ -15,6 +15,5 @@
 	[% ELSE %]
 		[% paste.revision = 0 %]
 	[% END %]
-	[% paste.content = "" %]
 [% END %]
 [% json.json %]

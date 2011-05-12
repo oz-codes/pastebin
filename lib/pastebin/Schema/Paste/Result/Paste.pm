@@ -32,9 +32,9 @@ __PACKAGE__->table("pastes");
 
 =head2 title
 
-  data_type: 'char'
+  data_type: 'varchar'
   is_nullable: 1
-  size: 64
+  size: 32
 
 =head2 content
 
@@ -86,7 +86,7 @@ __PACKAGE__->add_columns(
     sequence          => "pastes_id_seq",
   },
   "title",
-  { data_type => "char", is_nullable => 1, size => 64 },
+  { data_type => "varchar", is_nullable => 1, size => 32 },
   "content",
   { data_type => "text", is_nullable => 1 },
   "lang",
@@ -202,8 +202,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:02:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uAgOUlGsVQv24eD6zOa3gw
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:20:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W7zJCeB9abv4FI0rDddZ/A
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

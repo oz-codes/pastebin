@@ -22,23 +22,13 @@ Ext.onReady( function() {
     Ext.define('PasteList', {
         extend: 'Ext.data.Model',
         fields: [
-	    "id", "title","created_on","updated_on","lang","user_id","revision"
+	    "id", "title","created_on","updated_on","lang","user_id","revision","content"
         ],
 	proxy: {
 		type: "direct",
 		directFn: Paste.pastes,
 		paramsAsHash: true
 	}, 
-	filters: [
-		{
-			filterFn: function(item) {
-				console.log(item.revision);
-			}
-		}
-	],
-			
-		
-	
     });
 
 
@@ -72,7 +62,13 @@ Ext.onReady( function() {
                 type: "direct",
                 directFn: Paste.pastes,
                 paramsAsHash: true
-        }
+        },
+	filters: [
+		{
+			property: "revision",
+			value: 0
+		}
+	]
     });
 
 
@@ -313,6 +309,10 @@ Ext.onReady( function() {
 				} else {
 					Ext.Msg.alert("Notice",j.msg);
 					pastes.load();
+					pastes.filterBy(function(rec) {
+						console.info(rec);
+						return true;
+					});
 					form.getForm().reset();
 				}
 			});
