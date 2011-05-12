@@ -28,7 +28,16 @@ Ext.onReady( function() {
 		type: "direct",
 		directFn: Paste.pastes,
 		paramsAsHash: true
-	}
+	}, 
+	filters: [
+		{
+			property: "revision",
+			value: "0"
+		}
+	],
+			
+		
+	
     });
 
 

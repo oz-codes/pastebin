@@ -174,6 +174,53 @@ sub createFork :Direct :DirectArgs(1) {
         $c->stash(template=>"json/general.json",json=>$json);
 }
 
+sub createRev :Direct :DirectArgs(1) {
+        my ( $self , $c ) = @_;
+        my $opts = $c->req->data->[0];
+        my $title = $opts->{title};
+        my $post = $opts->{post};
+        my $lang = $opts->{lang};
+        my $oldId = $opts->{oldId};
+        my $json;
+        my $id;
+        my $uid;
+        if(!defined $post) {
+                $json = { error => "You did not provide any content.", errno => 2};
+        } elsif(!defined $oldId) {
+                $json = { error => "I don't know how you got this message. Seriously.", errno=>-1 };
+        } else {
+                my $language = $kate->syntaxes->{$lang};
+                chomp($language);
+                my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
+                my $datetime = sprintf "%4d-%02d-%02d %02d:%02d:%02d\n",$year+1900,$mon+1,$mday,$hour,$min,$sec;
+                my $db = $c->model("Paste::paste");
+		my $version = c->model("Paste::revision")->search({paste_id => $oldId});
+		$version = defined $version ? $version+1 : 1;
+                if(defined $c->session->{"__user"}) {
+                        $uid = $c->session->{"__user"}->{"id"};
+                } else {
+                        $uid = undef;
+                }
+                my $row = $db->create({
+                        title => $title,
+                        content => $post,
+                        lang => $lang,
+                        created_on => $datetime,
+                        updated_on => $datetime,
+                        user_id    => $uid
+                        });
+                $id = $row->{_column_data}->{id};
+                if($c->user_exists) {
+                        $c->model("Paste::user")->find({id=>$uid})->update({last_paste => $id});
+                }
+                $c->model("Paste::revision")->create({paste_id => $oldId, revision_id => $id, version => $version });
+                $json = { msg => "Your post was successfully made. You can view it using the saved pastes tab." };
+        }
+        $c->res->content_type("application/json");
+        $c->stash(template=>"json/general.json",json=>$json);
+}
+
+
 sub pastes :Direct :DirectArgs(1) {
 	my ( $self, $c) = @_;
 	my $opts = $c->req->data->[0];
