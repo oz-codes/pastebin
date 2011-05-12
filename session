@@ -1,8 +1,1 @@
-$VAR1 = {
-          'email' => 'gwarman@hostgator.com',
-          'last_paste' => 2,
-          'password' => 'a1347cc0189410ce3fe5c6e2b9ed586b',
-          'name' => undef,
-          'id' => 2,
-          'username' => 'gwarman'
-        };
+$VAR1 = undef;

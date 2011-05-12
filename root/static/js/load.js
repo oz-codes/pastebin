@@ -22,7 +22,7 @@ Ext.onReady( function() {
     Ext.define('PasteList', {
         extend: 'Ext.data.Model',
         fields: [
-	    "id", "title","created_on","updated_on","lang","user_id","content"
+	    "id", "title","created_on","updated_on","lang","user_id","revision"
         ],
 	proxy: {
 		type: "direct",
@@ -31,8 +31,9 @@ Ext.onReady( function() {
 	}, 
 	filters: [
 		{
-			property: "revision",
-			value: "0"
+			filterFn: function(item) {
+				console.log(item.revision);
+			}
 		}
 	],
 			
@@ -216,7 +217,6 @@ Ext.onReady( function() {
                                         Ext.Msg.alert("Error",j.error);
                                 } else {
                                         Ext.Msg.alert("Notice",j.msg);
-					console.info(Ext.getCmp("tabWidget"));
 					login.disable();
 					logout.enable();
 					tabs.setActiveTab(form);
@@ -542,7 +542,7 @@ Ext.onReady( function() {
                                                                         } else {
                                                                                 Ext.Msg.alert("Notice",j.msg);
                                                                                 pastes.load();
-                                                                                Ext.getCmp("rev").animate({
+                                                                                Ext.getCmp("revPanel").animate({
                                                                                         duration: 1000,
                                                                                         to: {
                                                                                                 opacity: 0
@@ -633,7 +633,6 @@ isteners: {
 						addPaste(opts[i]);
 					}
 					Auth.loggedin(null,function(r) {
-						console.info(r);
 						if(r.loggedin == 1) {
 							logout.enable();
 							login.disable();
@@ -658,10 +657,6 @@ isteners: {
 	
 	
     list.on("cellclick", function (g, r, c, e) {
-	console.info(g);
-	console.info(r);
-	console.info(c);
-	console.info(e);
 	if(c == 5) { return; }
   	if(i.id == "list-action") {
 		return;
