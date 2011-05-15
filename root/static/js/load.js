@@ -13,6 +13,7 @@ Ext.require([
 
 	
 Ext.onReady( function() {
+    l = null
     hasCmp = false;
     bw = Ext.getBody().getViewSize().width
     bh = Ext.getBody().getViewSize().height
@@ -336,10 +337,10 @@ Ext.onReady( function() {
 		}
 	}],
 	})
-    list = Ext.create("Ext.grid.Panel", {
+    function generateList() { 
+	list =  Ext.create("Ext.grid.Panel", {
 	title: "Saved Pastes",
 	id: "pasteList",
-	region: "west",
 	closable: false,
 	height: bh*0.5,
 	width: bw*0.25,
@@ -588,6 +589,22 @@ Ext.onReady( function() {
 	handler: function(grid,ri,ci) { 
 	}
 });
+    list.on("cellclick", function (g, r, c, e) {
+	if(c == 5) { return; }
+  	if(i.id == "list-action") {
+		return;
+	}
+	Paste.hasRevision({id : e.data.id} , function(r) {
+		if(r.answer > 0) {
+			revDialog(e.data)
+		} else {
+			addPaste(e.data.id);
+		}
+	})
+   }); 
+    return list;
+    }
+    list = generateList();
 			
     tabs = Ext.create("Ext.tab.Panel", {
 		region: "center",
@@ -641,30 +658,21 @@ Ext.onReady( function() {
 	region: "south",
 	height: bh*0.5,
     })		
+    listPanel = Ext.create("Ext.container.Container", {
+	region: "west"
+    });
+    listPanel.add(list);
     vue = Ext.create('Ext.container.Viewport', {
     layout: 'border',
     renderTo: 'ext',
     height: bh,
-    items: [
-	list,
+    items: [ 
+	listPanel,
 	tabs,
 	misc
-    ]
+     ]
 });
 	
-    list.on("cellclick", function (g, r, c, e) {
-	if(c == 5) { return; }
-  	if(i.id == "list-action") {
-		return;
-	}
-	Paste.hasRevision({id : e.data.id} , function(r) {
-		if(r.answer == 1) {
-			revDialog(e.data)
-		} else {
-			addPaste(e.data.id);
-		}
-	})
-   });
    tabs.on("click",function() {
 		pastes.load();
 	})
@@ -696,8 +704,7 @@ Ext.onReady( function() {
 	})
     }
     			function revDialog(data) {
-					if(hasCmp) { return; }
-					hasCmp = true;
+					console.info(data);
 					var revs = new Ext.data.Store({
 					      model: "PasteList",	
 					      proxy: {
@@ -711,11 +718,12 @@ Ext.onReady( function() {
 					});
 					revs.load()
 					id = data.id
+					console.info("Checking for revisions for"+id);
                                         height=tabs.getHeight();
                                         var rg = Ext.create("Ext.grid.Panel",{
-                                                closable: true,
+						region: "west",
                                                 id: "auxPanel",
-						height: bh*0.4,
+						height: bh*0.5,
                                                 title: "Revision list for "+data.title,
                                                 style: { opacity: 0 },
                                                 store: revs,
@@ -739,10 +747,11 @@ Ext.onReady( function() {
 						      flex: 1,
 						 }],
                                                 listeners: {
+								cellclick: {
 								fn: function(g,r,c,e) {
 									addPaste(e.data.id)
                                                                                 Ext.getCmp("auxPanel").animate({
-                                                                                        duration: 1000,
+                                                                                        duration: 250,
                                                                                         to: {
                                                                                                 opacity: 0
                                                                                         },
@@ -750,7 +759,11 @@ Ext.onReady( function() {
 											listeners: {
                                                                                                 afteranimate: {
 													fn: function() {
-														hasCmp = false;
+														list = generateList();
+														console.info(list);
+														listPanel.remove(rg);
+														listPanel.add(list);
+														list.animate({duration: 250, to: { opacity: 1} });
                                                                                                         }
                                                                                                 }
                                                                                         }
@@ -759,18 +772,31 @@ Ext.onReady( function() {
 							},
                                                         afterrender: {
                                                                 fn: function() {
-                                                                        Ext.getCmp("auxPanel").animate({
-                                                                                duration: 1000,
-                                                                                to: {
-                                                                                        opacity: 1
-                                                                                }
-                                                                        })
-                                                                }
+									  list.animate({
+										duration: 250,
+										to: { opacity: 0 },
+										listeners: {
+											afteranimate: {
+												fn: function() {
+													l = list;
+													listPanel.remove(list);
+													listPanel.add(rg);
+													rg.animate({
+														duration: 250,
+														to: {
+															opacity: 1
+														}
+													})
+												}
+											}
+										}
+									})
+								}
                                                         },
                                                         beforedestroy: {
                                                                 fn: function() {
-                                                                                Ext.getCmp("auxPanel").animate({
-                                                                                        duration: 1000,
+                                                                                rg.animate({
+                                                                                        duration: 250,
                                                                                         to: {
                                                                                                 opacity: 0
                                                                                         },
@@ -778,15 +804,19 @@ Ext.onReady( function() {
 											listeners: {
                                                                                                 afteranimate: {
 													fn: function() {
-														hasCmp = false;
+														list = generateList();
+														listPanel.remove(rg);
+														listPanel.add(list);
+														rg.destroy();
+														list.animate({ duration: 250, to: { opacity: 1 } })
                                                                                                         }
                                                                                                 }
                                                                                         }
                                                                                 })
-								return false;
                                                                 }
                                                         }
-                                        })
+                                        }
+					})
 					misc.add(rg);
 
 
