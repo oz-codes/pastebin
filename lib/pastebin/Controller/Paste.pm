@@ -243,7 +243,10 @@ sub hasRevision :Direct :DirectArgs(1) {
 	my $opts = $c->req->data->[0];
 	my $id = $opts->{id};
 	$c->res->content_type("application/json");
-	$c->stash(template=>"json/general.json",json=>{answer => (scalar($c->model("Paste::revision")->search({paste_id => $id}))>1?1:0)});
+	my @q = $c->model("Paste::revision")->search({paste_id => $id});
+	my $json = {answer => $#q+1};
+	warn Dumper($json);
+	$c->stash(template=>"json/general.json",json=>$json);
 }
 
 sub isRevision :Direct :DirectArgs(1) {
@@ -299,6 +302,16 @@ sub getPaste : Direct : DirectArgs(1) {
 		$json = { error => "No ID was provided.", errno=>7};
 	} else {
 		my @row = $c->model("Paste::paste")->find({id => $id});
+		my $rev = $c->model("Paste::revision")->find({revision_id=>$id});
+		if($rev) {
+			my @b = $c->model("Paste::revision")->search({paste_id=>$rev->{_column_data}->{paste_id}});
+			my $r;
+			for(my $i=0;$i<$#b+1;$i++) {
+				warn $i;
+				$r = $i if $b[$i]->{_column_data}->{revision_id} == $id;
+			}
+			$rev = defined $r ? $r+1 : 0;
+		}
 		if($#row<0) {
 			$json = { error => "I couldn't find that paste.", errno => 8 };
 		} else {
@@ -311,6 +324,7 @@ sub getPaste : Direct : DirectArgs(1) {
 				$out .= $kate->highlightText($line)."<br />";	
 			}		
 			$json->{content} = $kate->highlightText($json->{content});
+			$json->{revision} = $rev;	
 		}
 	}
 	$c->res->content_type("application/json");

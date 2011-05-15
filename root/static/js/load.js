@@ -688,13 +688,16 @@ Ext.onReady( function() {
 		if(e.error) {
 			Ext.Msg.alert("Error",e.error);
 		} else {
+			revision = e.revision;
 			content = e.content;
 			title = e.title;
 			lang = e.lang;
+			title = title + " ("+lang+")";
+			title += (revision!=null)?" (rev "+revision+")":"";
 			tab = Ext.create("Ext.panel.Panel",{
 				id: "paste-"+id,
 				closable: true,
-				title: title + " ("+lang+")",
+				title: title,
 				html: "Link to this: http://hg.fr.am:3002/#"+id+"<br /><br />"+content,
 				height: Ext.getBody().getViewSize().height
 			});
