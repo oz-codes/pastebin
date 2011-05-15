@@ -210,6 +210,7 @@ Ext.onReady( function() {
                                         Ext.Msg.alert("Notice",j.msg);
 					login.disable();
 					logout.enable();
+					newPaste.enable();
 					tabs.setActiveTab(Ext.getCmp("newPaste"));
 					/*tabs.add(logout);
 					tabs.remove(login,true);
@@ -341,7 +342,6 @@ Ext.onReady( function() {
 	region: "west",
 	closable: false,
 	height: bh*0.5,
-	bodyPadding: 5,
 	width: bw*0.25,
 	store: pastes,
 	columns: [
@@ -380,7 +380,6 @@ Ext.onReady( function() {
 						id: "auxPanel",
 						title: "Fork "+rec.get("title"),
 						height: bh*0.5,
-						bodyPadding: 5,
 						waitMsgTarget: true,       
 						style: { opacity: 0 },
 						fieldDefaults: {
@@ -493,7 +492,6 @@ Ext.onReady( function() {
                                                 id: "auxPanel",
 						height: bh*0.5,
                                                 title: "New revision of "+rec.get("title"),
-                                                bodyPadding: 5,
                                                 waitMsgTarget: true,
                                                 style: { opacity: 0 },
                                                 fieldDefaults: {
@@ -621,8 +619,10 @@ Ext.onReady( function() {
 							logout.enable();
 							login.disable();
 						} else {
+							newPaste.disable();
 							logout.disable();
 							login.enable();
+							tabs.setActiveTab(login);
 						}
 					})
 				return true;
@@ -677,7 +677,6 @@ Ext.onReady( function() {
     function addPaste (paste) {
 	id = paste;
 	
-		
 	Paste.getPaste(id,function(e) {
 		if(e.error) {
 			Ext.Msg.alert("Error",e.error);
@@ -741,7 +740,6 @@ Ext.onReady( function() {
 						      flex: 1,
 						 }],
                                                 listeners: {
-							cellclick: {
 								fn: function(g,r,c,e) {
 									addPaste(e.data.id)
                                                                                 Ext.getCmp("auxPanel").animate({
@@ -789,7 +787,6 @@ Ext.onReady( function() {
 								return false;
                                                                 }
                                                         }
-                                                }
                                         })
 					misc.add(rg);
 
