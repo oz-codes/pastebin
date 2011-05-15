@@ -345,7 +345,6 @@ Ext.onReady( function() {
 	width: bw*0.25,
 	store: pastes,
 	columns: [
-		new Ext.grid.RowNumberer({width: 31}),
 		{
 			dataIndex: "title",
 			text: "Title",
