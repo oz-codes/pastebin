@@ -1,1 +1,9 @@
-Run script/pastebin_server.pl to test the application.
+----------------------------------- PasteBin Clone --------------------------------------
+
+This is a fairly simple little web application. It was designed using the Catalyst
+MVC framework for Perl. All you have to do is run script/start_server.pl to start it up
+in test mode so you can get a feel for how it works, etc. 
+
+The meat of this project is a large javascript file, root/static/js/load.js, which 
+initializes all of the necessary information for the display. The frontend is all
+designed using the Ext javascript library, version 4.0.0. 
