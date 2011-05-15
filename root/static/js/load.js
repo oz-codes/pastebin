@@ -10,7 +10,12 @@ Ext.require([
     'Ext.ux.TabCloseMenu'
 
 ]);
+
+	
 Ext.onReady( function() {
+    hasCmp = false;
+    bw = Ext.getBody().getViewSize().width
+    bh = Ext.getBody().getViewSize().height
     Ext.QuickTips.init()
     Ext.define('UserList', {
 	extend: 'Ext.data.Model',
@@ -24,11 +29,6 @@ Ext.onReady( function() {
         fields: [
 	    "id", "title","created_on","updated_on","lang","user_id","revision","content"
         ],
-	proxy: {
-		type: "direct",
-		directFn: Paste.pastes,
-		paramsAsHash: true
-	}, 
     });
 
 
@@ -37,11 +37,6 @@ Ext.onReady( function() {
         fields: [
 	    "language", "name"
         ],
-	proxy: {
-		type: "direct",
-		directFn: Paste.languages,
-		paramsAsHash: true
-	}
     });
 
 
@@ -72,14 +67,14 @@ Ext.onReady( function() {
     });
 
 
-    login = new Ext.form.Panel({
+    login = Ext.create("Ext.form.Panel",{
 	id: "loginTab",
 	title: "Log in",
 	items: [{
                 xtype: 'fieldset',
                 title: 'Log in',
                 defaults: {
-                        width: 1200,
+			width: bw*0.70,
                 },
                 items: [{
                         fieldLabel: "Username",
@@ -100,7 +95,7 @@ Ext.onReady( function() {
 					fn: function() {
 						Ext.get("register").on("mousedown",function() {
 							   login.disable();
-							   register = new Ext.form.Panel( {
+							   register =Ext.create("Ext.form.Panel", {
 								id: "registerTab",
 								title: "Register",
 								closable: true,
@@ -113,7 +108,7 @@ Ext.onReady( function() {
 									}
 								},
 								defaults: {
-									width: 1800
+									width: bw*0.72,
 								},
 								items: [{
 									xtype: "fieldset",
@@ -169,7 +164,7 @@ Ext.onReady( function() {
 								}], 
 								buttons: [{
 									text: "Register",
-									width: 2100,
+									width: bw,
 									height: 32,
 									handler: function() {
 										values = register.getForm().getValues();
@@ -202,7 +197,7 @@ Ext.onReady( function() {
         }],
         buttons: [{
                 text: "Log in",
-		width: 2100,
+		width: bw,
 		height: 32,
                 handler: function() {
                         var values = login.getForm().getValues();
@@ -215,7 +210,7 @@ Ext.onReady( function() {
                                         Ext.Msg.alert("Notice",j.msg);
 					login.disable();
 					logout.enable();
-					tabs.setActiveTab(form);
+					tabs.setActiveTab(Ext.getCmp("newPaste"));
 					/*tabs.add(logout);
 					tabs.remove(login,true);
 					tabs.refresh();*/
@@ -230,7 +225,7 @@ Ext.onReady( function() {
         title: "Log out",
         buttons: [{
                 text: "Log out",
-		width: 2100,
+		width: bw,
 		height: 32,
                 handler: function() {
                         Auth.out(function(j) {
@@ -240,7 +235,7 @@ Ext.onReady( function() {
                                         Ext.Msg.alert("Notice",j.msg);
 					login.enable()
 					logout.disable();
-					tabs.setActiveTab(form);
+					tabs.setActiveTab(Ext.getCmp("newPaste"));
 				/*	tabs.add(login);
                                         tabs.remove('logoutTab',true);*/
                                 }
@@ -250,43 +245,57 @@ Ext.onReady( function() {
     });
 
 
-    form = new Ext.form.Panel({
+    newPaste = Ext.create("Ext.form.Panel",{
 	id: "newPaste",
 	title: "New Paste",
-	bodyPadding: 5,
+	//height: bw * 0.52,
 	waitMsgTarget: true,
-		paramsAsHash: true,
-	api: {
-		submit: Paste.doStuff
-	},
 	fieldDefaults: {
 	},
 	items: [{
 		xtype: 'fieldset',
+		id: "newPasteForm",
 		title: 'New Paste',
 		defaultType: 'textfield',
 		defaults: {
-			width: 1200, 
+			width: bw*0.52, 
 		},
 		items: [{
 			fieldLabel: "Title",
 			emptyText: "Title",
 			name: "title",
 			id: 'title',
+			validator: function(v) {
+				if(v.length == 0) {
+					return "You can't submit an empty title.";
+				} else { return true; }
+			}
 		}, {
 			fieldLabel: "Post",
 			xtype: 'textareafield',
 			name: 'post',
 			id: 'post',
-			height: 400
+			height: bh*0.3,
+			validator: function(v) {
+				if(v.length == 0) {
+					return "You can't submit empty content.";
+				} else { return true; }
+			}
 		}, {
 			fieldLabel: 'Language',
 			name: 'lang',
 			xtype: 'combobox',
 			store: languages,
+			forceSelection: true,
+			matchFieldWidth: true,
+			mode: 'local',
+			minChars: 1,
+			triggerAction: 'all',
+			queryParam: 'query',
 			id: 'lang',
-			typeAhead: true,
-			typeAheadDelay: 1,
+			paramsAsHash: true,
+			typeAhead: false,
+			valueNotFoundText: "That language wasn't found.",
 			forceSelection: true,
 			valueField: "language",
 			displayField: "language",
@@ -296,13 +305,21 @@ Ext.onReady( function() {
 	buttons: [{
 		text: "Submit",
 		handler: function() {
-			var values = form.getForm().getValues();
+			var values = Ext.getCmp("newPaste").getForm().getValues();
 			var title = values.title;
 			var post = values.post;
 			var lang = values.lang;
 			lang = lang.replace(/\s*$/,"");
 			post = post.replace(/\s*$/,"");
 			title = title.replace(/\s*$/,"");
+			if(title.length == 0) {
+				Ext.Msg.alert("Notice", "You can't submit with an empty title.");
+				return false;
+			} 
+			if(post.length == 0) {
+				Ext.Msg.alert("Notice", "Please provide some content for your submission.");
+				return false;
+			}
 			Paste.create({title: title, post: post, lang: lang}, function(j) {
 				if(j.error) {
 					Ext.Msg.alert("Error",j.error);
@@ -310,10 +327,9 @@ Ext.onReady( function() {
 					Ext.Msg.alert("Notice",j.msg);
 					pastes.load();
 					pastes.filterBy(function(rec) {
-						console.info(rec);
 						return true;
 					});
-					form.getForm().reset();
+					Ext.getCmp("newPaste").getForm().reset();
 				}
 			});
 		}
@@ -322,10 +338,11 @@ Ext.onReady( function() {
     list = Ext.create("Ext.grid.Panel", {
 	title: "Saved Pastes",
 	id: "pasteList",
+	region: "west",
 	closable: false,
-	maxHeight: 780,
+	height: bh*0.5,
 	bodyPadding: 5,
-	height: Ext.getBody().getViewSize().height,
+	width: bw*0.25,
 	store: pastes,
 	columns: [
 		new Ext.grid.RowNumberer({width: 31}),
@@ -353,19 +370,16 @@ Ext.onReady( function() {
 				tooltip: "Fork",
 				id: "forkIcon",
 				handler: function(grid, rowIndex, colIndex) {
+					console.log("hasCmp: "+hasCmp);
+					if(hasCmp) { return; }
+					hasCmp = true;
 					rec = pastes.getAt(rowIndex);
 					height=tabs.getHeight();
-					Ext.core.DomHelper.insertAfter("ext",{tag: "div", id: "fork"});
-					tabs.animate({
-						duration: 1000,
-						to: {
-							height: 0
-						}
-					})
-					    var fork = new Ext.form.Panel({
+					    var fork = Ext.create("Ext.form.Panel",{
 						closable: true,
-						id: "forkPanel",
+						id: "auxPanel",
 						title: "Fork "+rec.get("title"),
+						height: bh*0.5,
 						bodyPadding: 5,
 						waitMsgTarget: true,       
 						style: { opacity: 0 },
@@ -373,69 +387,63 @@ Ext.onReady( function() {
 						},
 						items: [{
 							xtype: 'fieldset',
+							id: "auxPanelForm",
 							title: 'Fork '+rec.get("title").replace(/\w*$/,""),
 							defaultType: 'textfield',
 							defaults: {
-								width: 1200,
+								width: bw*0.72,
 							},
 							items: [{
 								fieldLabel: "Title",
 								emptyText: "Title",
-								name: "title",
-								id: 'title',
+								name: "ftitle",
+								id: 'ftitle',
 								value: "Fork of "+rec.get("title")
 							}, {
 								fieldLabel: "Post",
 								xtype: 'textareafield',
-								name: 'post',
-								id: 'post',
-								height: 400,
+								name: 'fpost',
+								id: 'fpost',
+								height: bh*0.3,
 								value: rec.get("content")
 							}, {
 								fieldLabel: 'Language',
-								name: 'lang',
+								name: 'flang',
 								xtype: 'displayfield',
-								id: 'lang',
+								id: 'flang',
 								value: rec.get("lang")
-							}]
+							}, {
+								xtype: "button",
+								text: "Submit",
+                                                        handler: function() {
+                                                                var values = fork.getForm().getValues();
+                                                                var title = values.ftitle;
+                                                                var post = values.fpost;
+                                                                var lang = rec.get("lang")
+                                                                lang = lang.replace(/\s*$/,"");
+                                                                post = post.replace(/\s*$/,"");
+                                                                Paste.createFork({title: title, post: post, lang: lang, oldId: rec.get("id")}, function(j) {
+                                                                        if(j.error) {
+                                                                                Ext.Msg.alert("Error",j.error);
+                                                                        } else {
+                                                                                Ext.Msg.alert("Notice",j.msg);
+                                                                                pastes.load();
+                                                                                height+=32;
+                                                                                Ext.getCmp("auxPanel").animate({
+                                                                                        duration: 1000,
+                                                                                        to: {
+                                                                                                opacity: 0
+                                                                                        }
+                                                                                });
+                                                                        }
+                                                                });
+                                                        }
+                                                }]
 						}],
-						buttons: [{
-							text: "Submit",
-							handler: function() {
-								var values = fork.getForm().getValues();
-								var title = values.title;
-								var post = values.post;
-								var lang = rec.get("lang")
-								lang = lang.replace(/\s*$/,"");
-								post = post.replace(/\s*$/,"");
-								Paste.createFork({title: title, post: post, lang: lang, oldId: rec.get("id")}, function(j) {
-									if(j.error) {
-										Ext.Msg.alert("Error",j.error);
-									} else {
-										Ext.Msg.alert("Notice",j.msg);
-										pastes.load();
-										height+=32;
-										Ext.getCmp("forkPanel").animate({
-											duration: 1000,
-											to: {
-												opacity: 0
-											}
-										});
-										tabs.animate({
-											duration: 1000,
-											to: {
-												height: height
-											}
-										})
-									}
-								});
-							}
-						}],
-						renderTo: "fork",
 						listeners: {
 							afterrender: {
 								fn: function() {
-									Ext.getCmp("forkPanel").animate({
+									Ext.getCmp("auxPanel").animate({
 										duration: 1000,
 										to: {
 											opacity: 1
@@ -445,14 +453,7 @@ Ext.onReady( function() {
 							},
 							beforedestroy: {
 								fn: function() {
-										Ext.getCmp
-                                                                                tabs.animate({
-                                                                                        duration: 1000,
-                                                                                        to: {
-                                                                                                height: height
-                                                                                        },
-										})
-										Ext.getCmp("forkPanel").animate({
+										Ext.getCmp("auxPanel").animate({
 											duration: 1000,
 											to: {
 												opacity: 0
@@ -460,8 +461,8 @@ Ext.onReady( function() {
 											listeners: {
 												afteranimate: {
 													fn: function() {
-														Ext.get("fork").remove();
-														Ext.getCmp('forkPanel').getForm().reset();
+														hasCmp = false;
+														Ext.getCmp('auxPanel').getForm().reset();
 													}
 												}
 											}
@@ -471,6 +472,7 @@ Ext.onReady( function() {
 							}
 						}
 					})
+					misc.add(fork);
 					
 				}
 			}, {
@@ -480,18 +482,16 @@ Ext.onReady( function() {
 				getClass: function(v, m, rec, r, c, s) {
 				},
                                 handler: function(grid, rowIndex, colIndex) {
+					console.log("hasCmp: "+hasCmp);
+					if(hasCmp) { return; }
+					hasCmp = true;
                                         rec = pastes.getAt(rowIndex);
                                         height=tabs.getHeight();
                                         Ext.core.DomHelper.insertAfter("ext",{tag: "div", id: "rev"});
-                                        tabs.animate({
-                                                duration: 1000,
-                                                to: {
-                                                        height: 0
-                                                }
-                                        })
-                                            var rev = new Ext.form.Panel({
+                                            var rev = Ext.create("Ext.form.Panel",{
                                                 closable: true,
-                                                id: "revPanel",
+                                                id: "auxPanel",
+						height: bh*0.5,
                                                 title: "New revision of "+rec.get("title"),
                                                 bodyPadding: 5,
                                                 waitMsgTarget: true,
@@ -503,66 +503,58 @@ Ext.onReady( function() {
                                                         title: 'New revision of '+rec.get("title").replace(/\w*$/,""),
                                                         defaultType: 'textfield',
                                                         defaults: {
-                                                                width: 1200,
+								width: bw*0.72,
                                                         },
                                                         items: [{
                                                                 fieldLabel: "Title",
-								
                                                                 name: "title",
-                                                                id: 'title',
+                                                                id: 'rtitle',
 								xtype: "displayfield",
                                                                 value: rec.get("title")
                                                         }, {
                                                                 fieldLabel: "Post",
                                                                 xtype: 'textareafield',
-                                                                name: 'post',
-                                                                id: 'post',
-                                                                height: 400,
+                                                                name: 'rpost',
+                                                                id: 'rpost',
+                                                                height: bh*0.3,
                                                                 value: rec.get("content")
                                                         }, {
                                                                 fieldLabel: 'Language',
-                                                                name: 'lang',
+                                                                name: 'rlang',
                                                                 xtype: 'displayfield',
-                                                                id: 'lang',
+                                                                id: 'rlang',
                                                                 value: rec.get("lang")
-                                                        }]
-}],
-                                                buttons: [{
-                                                        text: "Submit",
-                                                        handler: function() {
+                                                        }, {
+								xtype: "button",
+								text: "Submit",
+								handler: function() {   
                                                                 var values = rev.getForm().getValues();
-								var title = rec.get("title")                     
-								var post = values.post;
+                                                                var title = rec.get("title")                  
+                                                                var post = values.rpost;
                                                                 var lang = rec.get("lang")
                                                                 lang = lang.replace(/\s*$/,"");
                                                                 post = post.replace(/\s*$/,"");
                                                                 Paste.createRev({title: title, post: post, lang: lang, oldId: rec.get("id")}, function(j) {
-                                                                        if(j.error) {
+                                                                        if(j.error) {   
                                                                                 Ext.Msg.alert("Error",j.error);
                                                                         } else {
                                                                                 Ext.Msg.alert("Notice",j.msg);
                                                                                 pastes.load();
-                                                                                Ext.getCmp("revPanel").animate({
+                                                                                Ext.getCmp("auxPanel").animate({
                                                                                         duration: 1000,
                                                                                         to: {
                                                                                                 opacity: 0
                                                                                         }
                                                                                 });
-                                                                                tabs.animate({
-                                                                                        duration: 1000,
-                                                                                        to: {
-                                                                                                height: height
-                                                                                        }
-                                                                                })
                                                                         }
                                                                 });
                                                         }
-                                                }],
-                                                renderTo: "rev",
+						}],
+						}],
                                                 listeners: {
                                                         afterrender: {
                                                                 fn: function() {
-                                                                        Ext.getCmp("revPanel").animate({
+                                                                        Ext.getCmp("auxPanel").animate({
                                                                                 duration: 1000,
                                                                                 to: {
                                                                                         opacity: 1
@@ -572,24 +564,15 @@ Ext.onReady( function() {
                                                         },
                                                         beforedestroy: {
                                                                 fn: function() {
-                                                                                Ext.getCmp
-                                                                                tabs.animate({
-                                                                                        duration: 1000,
-                                                                                        to: {
-                                                                                                height: height
-                                                                                        },
-                                                                                })
-                                                                                Ext.getCmp("revPanel").animate({
+                                                                                Ext.getCmp("auxPanel").animate({
                                                                                         duration: 1000,
                                                                                         to: {
                                                                                                 opacity: 0
                                                                                         },
-
-isteners: {
+											listeners: {
                                                                                                 afteranimate: {
                                                                                                         fn: function() {
-                                                                                                                Ext.get("rev").remove();
-                                                                                                                Ext.getCmp('revPanel').getForm().reset();
+														hasCmp = false;
                                                                                                         }
                                                                                                 }
                                                                                         }
@@ -599,6 +582,7 @@ isteners: {
                                                         }
                                                 }
                                         })
+					misc.add(rev);
 
                                 }
 			}]
@@ -609,16 +593,16 @@ isteners: {
 });
 			
     tabs = Ext.create("Ext.tab.Panel", {
+		region: "center",
 		id: "tabWidget",
-		renderTo: 'ext',
 		resizeTabs: true,
+		height: bh*0.5,
 		enableTabScroll: true,
 		defaults: {
 			autoScroll : true,
 		},
 		items: [
-			form,
-			list,
+			Ext.getCmp("newPaste"),
 			login,
 			logout
 		],
@@ -654,23 +638,37 @@ isteners: {
             ],
         })
     });
-	
+    misc = Ext.create("Ext.container.Container", {
+	region: "south",
+	height: bh*0.5,
+    })		
+    vue = Ext.create('Ext.container.Viewport', {
+    layout: 'border',
+    renderTo: 'ext',
+    height: bh,
+    items: [
+	list,
+	tabs,
+	misc
+    ]
+});
 	
     list.on("cellclick", function (g, r, c, e) {
 	if(c == 5) { return; }
   	if(i.id == "list-action") {
 		return;
 	}
-	addPaste(e.data.id);
+	Paste.hasRevision({id : e.data.id} , function(r) {
+		if(r.answer == 1) {
+			revDialog(e.data)
+		} else {
+			addPaste(e.data.id);
+		}
+	})
    });
    tabs.on("click",function() {
 		pastes.load();
 	})
-    tabs.on("beforetabchange",function(tp,n,o) {
-	if(n == list) {
-		pastes.load();
-	}
-    });
     // tab generation code
     index = 0;
     function addTab(tab) {
@@ -699,4 +697,102 @@ isteners: {
 		}
 	})
     }
+    			function revDialog(data) {
+					if(hasCmp) { return; }
+					hasCmp = true;
+					var revs = new Ext.data.Store({
+					      model: "PasteList",	
+					      proxy: {
+						type: "direct",
+						directFn: Paste.getRevisions,
+						extraParams: {
+						    id: data.id
+						},
+						paramsAsHash: true
+					      }
+					});
+					revs.load()
+					id = data.id
+                                        height=tabs.getHeight();
+                                        var rg = Ext.create("Ext.grid.Panel",{
+                                                closable: true,
+                                                id: "auxPanel",
+						height: bh*0.4,
+                                                title: "Revision list for "+data.title,
+                                                style: { opacity: 0 },
+                                                store: revs,
+						columns: [
+						    //new Ext.grid.RowNumberer({width: 31}),
+						    {
+						      dataIndex: "title",
+						      text: "revision",
+						      flex: 1
+						} , {
+						      dataIndex: "created_on",
+						      text: "Created",
+						      flex: 1,
+						}, {
+						      dataIndex: "lang",
+						      text: "Language",
+						      flex: 1,
+						 }, {
+						      dataIndex: "user_id",
+						      text: "Posted by",
+						      flex: 1,
+						 }],
+                                                listeners: {
+							cellclick: {
+								fn: function(g,r,c,e) {
+									addPaste(e.data.id)
+                                                                                Ext.getCmp("auxPanel").animate({
+                                                                                        duration: 1000,
+                                                                                        to: {
+                                                                                                opacity: 0
+                                                                                        },
+
+											listeners: {
+                                                                                                afteranimate: {
+													fn: function() {
+														hasCmp = false;
+                                                                                                        }
+                                                                                                }
+                                                                                        }
+                                                                                })
+                                                               }
+							},
+                                                        afterrender: {
+                                                                fn: function() {
+                                                                        Ext.getCmp("auxPanel").animate({
+                                                                                duration: 1000,
+                                                                                to: {
+                                                                                        opacity: 1
+                                                                                }
+                                                                        })
+                                                                }
+                                                        },
+                                                        beforedestroy: {
+                                                                fn: function() {
+                                                                                Ext.getCmp("auxPanel").animate({
+                                                                                        duration: 1000,
+                                                                                        to: {
+                                                                                                opacity: 0
+                                                                                        },
+
+											listeners: {
+                                                                                                afteranimate: {
+													fn: function() {
+														hasCmp = false;
+                                                                                                        }
+                                                                                                }
+                                                                                        }
+                                                                                })
+								return false;
+                                                                }
+                                                        }
+                                                }
+                                        })
+					misc.add(rg);
+
+
+}
 });

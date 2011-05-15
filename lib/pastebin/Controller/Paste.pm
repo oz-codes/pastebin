@@ -232,6 +232,50 @@ sub pastes :Direct :DirectArgs(1) {
 	$c->stash(template=>"json/pastes.json",json=>$json);
 }
 
+sub hasRevision :Direct :DirectArgs(1) {
+	my ( $self, $c) = @_;
+	my $opts = $c->req->data->[0];
+	my $id = $opts->{id};
+	$c->res->content_type("application/json");
+	$c->stash(template=>"json/general.json",json=>{answer => (scalar($c->model("Paste::revision")->search({paste_id => $id}))>1?1:0)});
+}
+
+sub isRevision :Direct :DirectArgs(1) {
+	my ( $self, $c ) = @_;
+	my $opts = $c->req->data->[0];
+	my $id = $opts->{id};
+	$c->res->content_type("application/json");
+	my $rs = $c->model("Paste::revision")->find({revision_id => $id});
+	my $json;
+	if(defined $rs) {
+		$json = {answer => $rs->{__column_data}->{paste_id}};
+	} else {
+		$json = {answer => -1};
+	}
+	#/warn Dumper($rs);
+	$c->stash(template=>"json/general.json",json=>$json);
+}
+
+sub getRevisions :Direct :DirectArgs(1) {
+	my ($self,$c) = @_;
+	my $opts = $c->req->data->[0];
+	my $id = $opts->{id};
+	$c->res->content_type("application/json");
+	my $json;
+	my @r = $c->model("Paste::revision")->search({paste_id => $id});
+	for(my $i = 0; $i < $#r+1; $i++) {
+		my $rev = $r[$i];
+		next if !defined $rev->{_column_data}->{revision_id};
+		my @arr = $c->model("Paste::paste")->find({id => $rev->{_column_data}->{revision_id}});
+		my $arr = &jarr(\@arr);
+		push @$json,$arr->[0];
+	}	
+	open my $f, ">rrrr";
+	print $f Dumper($json);
+	close $f;
+	$c->stash(template=>"json/revs.json",json=>$json);
+}
+
 
 sub getPaste : Direct : DirectArgs(1) {
 	my ( $self , $c ) = @_;
@@ -250,7 +294,7 @@ sub getPaste : Direct : DirectArgs(1) {
 	} else {
 		my @row = $c->model("Paste::paste")->find({id => $id});
 		if($#row<0) {
-			$json = { error => "I couldn't find that book.", errno => 8 };
+			$json = { error => "I couldn't find that paste.", errno => 8 };
 		} else {
 			$json = &jarr(\@row);
 			$json = $json->[0];
