@@ -271,6 +271,9 @@ sub getRevisions :Direct :DirectArgs(1) {
 	my $id = $opts->{id};
 	$c->res->content_type("application/json");
 	my $json;
+	my @arrr = $c->model("Paste::paste")->search({id => $id});
+	my $arar = &jarr(\@arrr);
+	push @$json,$arar->[0];
 	my @r = $c->model("Paste::revision")->search({paste_id => $id});
 	for(my $i = 0; $i < $#r+1; $i++) {
 		my $rev = $r[$i];
