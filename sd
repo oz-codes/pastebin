@@ -1,2 +1,0 @@
-#!/bin/bash
-script/pastebin_create.pl model Paste DBIC::Schema pastebin::Schema::Paste create=static dbi:mysql:pastebin pastebin user quote_char='`' name_sep='.'
