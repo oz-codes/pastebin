@@ -97,6 +97,8 @@ sub create :Direct :DirectArgs(1)  {
 		$json = { error => "You did not provide a language.", errno => 3};
 	} elsif(!defined $kate->syntaxes->{$lang}) {
 		$json = { error => "The language you provided does not exist", errno => 4};
+	} elsif(!$c->user_exists) {
+		$json = { error => "You are not currently logged in.", errno => 5};
 	} else {
 		my $language = $kate->syntaxes->{$lang};
 		chomp($language);
@@ -144,7 +146,9 @@ sub createFork :Direct :DirectArgs(1) {
                 $json = { error => "The language you provided does not exist", errno => 4};
 	} elsif(!defined $oldId) {
 		$json = { error => "I don't know how you got this message. Seriously.", errno=>-1 };
-        } else {
+        } elsif(!$c->user_exists) {
+		$json = { error => "You are not currently logged in.", errno=> 5};
+	} else {
                 my $language = $kate->syntaxes->{$lang};
                 chomp($language);
                 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
@@ -188,7 +192,9 @@ sub createRev :Direct :DirectArgs(1) {
                 $json = { error => "You did not provide any content.", errno => 2};
         } elsif(!defined $oldId) {
                 $json = { error => "I don't know how you got this message. Seriously.", errno=>-1 };
-        } else {
+        } elsif(!$c->user_exists) {
+		$json = { error => "You are not currently logged in.", errno => 5 };
+	} else {
                 my $language = $kate->syntaxes->{$lang};
                 chomp($language);
                 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
