@@ -1,5 +1,5 @@
 Ext.Loader.setConfig({enabled: true});
-Ext.Loader.setPath('Ext.ux', '/static/js/extjs/examples/ux')
+Ext.Loader.setPath('Ext.hg', '/static/js/hg')
 
 Ext.require([
     'Ext.form.*',
@@ -7,7 +7,7 @@ Ext.require([
     'Ext.data.*',
     'Ext.grid.*',
     'Ext.direct.*',
-
+    'Ext.hg.CloseTab'
 ]);
 
 Ext.onReady( function() {
@@ -28,7 +28,7 @@ Ext.onReady( function() {
         extend: 'Ext.data.Model',
         fields: [
 	    "id", "title","created_on","updated_on","lang","user_id","revision","content"
-        ],
+        ]
     });
 
 
@@ -36,7 +36,7 @@ Ext.onReady( function() {
         extend: 'Ext.data.Model',
         fields: [
 	    "language", "name"
-        ],
+        ]
     });
 
 
@@ -81,13 +81,13 @@ Ext.onReady( function() {
 			xtype: "textfield",
                         emptyText: "Username...",
                         name: "username",
-                        id: 'username',
+                        id: 'username'
                 }, {
                         fieldLabel: "Password",
 			xtype: "textfield",
 			inputType: "password",
                         name: 'password',
-                        id: 'password',
+                        id: 'password'
                 }, {
 			html: "Click <a href='#' class='register' id='register'>here</a> to register.",
 			listeners: {
@@ -218,7 +218,7 @@ Ext.onReady( function() {
                                 }
                         });
                 }
-        }],
+        }]
     });
     logout = Ext.create("Ext.panel.Panel",{
         id: "logoutTab",
@@ -243,7 +243,7 @@ Ext.onReady( function() {
                                 }
                         });
                 }
-        }],
+        }]
     });
 
 
@@ -335,7 +335,7 @@ Ext.onReady( function() {
 				}
 			});
 		}
-	}],
+	}]
 	})
     function generateList() { 
 	list =  Ext.create("Ext.grid.Panel", {
@@ -586,9 +586,7 @@ Ext.onReady( function() {
 			}]
 		}
 		],
-	handler: function(grid,ri,ci) { 
-	}
-});
+    });
     list.on("cellclick", function (g, r, c, e) {
 	if(c == 5) { return; }
   	if(i.id == "list-action") {
@@ -619,7 +617,7 @@ Ext.onReady( function() {
 		height: bh*0.5,
 		enableTabScroll: true,
 		defaults: {
-			autoScroll : true,
+			autoScroll : true
 		},
 		items: [
 			Ext.getCmp("newPaste"),
@@ -650,7 +648,7 @@ Ext.onReady( function() {
 				return true;
 				}
 			}
-		},
+		}
     });
     misc = Ext.create("Ext.container.Container", {
 	region: "south",
@@ -745,15 +743,15 @@ Ext.onReady( function() {
 						} , {
 						      dataIndex: "created_on",
 						      text: "Created",
-						      flex: 1,
+						      flex: 1
 						}, {
 						      dataIndex: "lang",
 						      text: "Language",
-						      flex: 1,
+						      flex: 1
 						 }, {
 						      dataIndex: "user_id",
 						      text: "Posted by",
-						      flex: 1,
+						      flex: 1
 						 }],
                                                 listeners: {
 								cellclick: {
@@ -804,10 +802,6 @@ Ext.onReady( function() {
 									})
 								}
                                                         },
-							destroy: {
-								fn: function() {
-								}
-							},
                                                         beforedestroy: {
                                                                 fn: function() {
 										if(rev) { return false; } 
@@ -818,7 +812,6 @@ Ext.onReady( function() {
                                                                                         to: {
                                                                                                 opacity: 0
                                                                                         },
-
 											listeners: {
                                                                                                 afteranimate: {
 													fn: function() {
