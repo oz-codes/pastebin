@@ -7,12 +7,11 @@ Ext.require([
     'Ext.data.*',
     'Ext.grid.*',
     'Ext.direct.*',
-    'Ext.ux.TabCloseMenu'
 
 ]);
 
-	
 Ext.onReady( function() {
+    rev = null;
     l = null
     hasCmp = false;
     bw = Ext.getBody().getViewSize().width
@@ -237,6 +236,7 @@ Ext.onReady( function() {
                                         Ext.Msg.alert("Notice",j.msg);
 					login.enable()
 					logout.disable();
+					newPaste.disable();
 					tabs.setActiveTab(Ext.getCmp("newPaste"));
 				/*	tabs.add(login);
                                         tabs.remove('logoutTab',true);*/
@@ -594,10 +594,13 @@ Ext.onReady( function() {
   	if(i.id == "list-action") {
 		return;
 	}
+	console.log("looks like it's time to check for revisions");
 	Paste.hasRevision({id : e.data.id} , function(r) {
 		if(r.answer > 0) {
+			console.log('we haz revizion');
 			revDialog(e.data)
 		} else {
+			console.log('we haz no revizion');
 			addPaste(e.data.id);
 		}
 	})
@@ -606,6 +609,9 @@ Ext.onReady( function() {
     }
     list = generateList();
 			
+    function closeTab(cmp, e) {
+	console.info(e);
+    }
     tabs = Ext.create("Ext.tab.Panel", {
 		region: "center",
 		id: "tabWidget",
@@ -645,14 +651,6 @@ Ext.onReady( function() {
 				}
 			}
 		},
-		plugins: Ext.create('Ext.ux.TabCloseMenu', {
-            extraItemsTail: [
-                '-',
-                {
-                    text: 'Closable',
-                }
-            ],
-        })
     });
     misc = Ext.create("Ext.container.Container", {
 	region: "south",
@@ -699,15 +697,20 @@ Ext.onReady( function() {
 				closable: true,
 				title: title,
 				html: "Link to this: http://hg.fr.am:3002/#"+id+"<br /><br />"+content,
-				height: Ext.getBody().getViewSize().height
+				height: Ext.getBody().getViewSize().height,
+				listeners: {
+					mousedown: {
+						fn: function() { alert('hai'); }
+					}
+				}
 			});
-
 			tabs.add(tab).show()
 		}
 	})
     }
+			rendered = false;
+			rev = false;
     			function revDialog(data) {
-					console.info(data);
 					var revs = new Ext.data.Store({
 					      model: "PasteList",	
 					      proxy: {
@@ -721,11 +724,14 @@ Ext.onReady( function() {
 					});
 					revs.load()
 					id = data.id
-					console.info("Checking for revisions for"+id);
-                                        height=tabs.getHeight();
-                                        var rg = Ext.create("Ext.grid.Panel",{
+					console.log("creating dialogue");
+                                        function createRevDiag() {
+						console.log("in create rev diag");
+						var rg = null;
+						rg = Ext.create("Ext.grid.Panel",{
 						region: "west",
-                                                id: "auxPanel",
+                                                id: "revPanel",
+						closable: true,
 						height: bh*0.5,
                                                 title: "Revision list for "+data.title,
                                                 style: { opacity: 0 },
@@ -734,7 +740,7 @@ Ext.onReady( function() {
 						    //new Ext.grid.RowNumberer({width: 31}),
 						    {
 						      dataIndex: "title",
-						      text: "revision",
+						      dtext: "revision",
 						      flex: 1
 						} , {
 						      dataIndex: "created_on",
@@ -752,52 +758,61 @@ Ext.onReady( function() {
                                                 listeners: {
 								cellclick: {
 								fn: function(g,r,c,e) {
+									console.log("cellclick addpaste");
 									addPaste(e.data.id)
-                                                                                Ext.getCmp("auxPanel").animate({
-                                                                                        duration: 250,
-                                                                                        to: {
-                                                                                                opacity: 0
-                                                                                        },
-
-											listeners: {
-                                                                                                afteranimate: {
-													fn: function() {
-														list = generateList();
-														console.info(list);
-														listPanel.remove(rg);
-														listPanel.add(list);
-														list.animate({duration: 250, to: { opacity: 1} });
-                                                                                                        }
-                                                                                                }
-                                                                                        }
-                                                                                })
+										console.log("destroying rg");
+										rg.destroy();
                                                                }
 							},
                                                         afterrender: {
                                                                 fn: function() {
+									  console.log("in afterrender, going to animate list to 0");
 									  list.animate({
 										duration: 250,
 										to: { opacity: 0 },
 										listeners: {
 											afteranimate: {
 												fn: function() {
-													l = list;
+													console.log("done animating list to 0, removing list and adding rg");
 													listPanel.remove(list);
 													listPanel.add(rg);
-													rg.animate({
+													console.log("animating rg to 1");
+													console.info(rg);
+													a = rg.animate({
 														duration: 250,
 														to: {
-															opacity: 1
+															opacity: 5
+														},
+														listeners: { 
+															beforeanimate: {
+																fn: function() {
+																	console.log("rg beforeanim");
+																}
+															},
+															afteranimate: { 
+																fn: function() { 
+																	console.log("animated rg to 1") 
+																} 
+															} 
 														}
 													})
+													console.info(a);
+													console.log('tee heee');
 												}
 											}
 										}
 									})
 								}
                                                         },
+							destroy: {
+								fn: function() {
+								}
+							},
                                                         beforedestroy: {
                                                                 fn: function() {
+										if(rev) { return false; } 
+										console.log("before destroy");
+										console.log("animating rg to 0");
                                                                                 rg.animate({
                                                                                         duration: 250,
                                                                                         to: {
@@ -807,21 +822,33 @@ Ext.onReady( function() {
 											listeners: {
                                                                                                 afteranimate: {
 													fn: function() {
+														rev = true;
+														console.log("rg animated to 0");
+														console.log("regen list");
 														list = generateList();
+														console.log("remove rg, add list");
 														listPanel.remove(rg);
 														listPanel.add(list);
-														rg.destroy();
-														list.animate({ duration: 250, to: { opacity: 1 } })
+														console.log("animate list to 1");
+														list.animate({ duration: 250, to: { opacity: 1 }, listeners: { afteranimate: { fn: function() { console.log("list animated to 1"); } } } });
+														console.log("destroying rg");
+														rev = false;
                                                                                                         }
                                                                                                 }
                                                                                         }
                                                                                 })
+									console.log("returning false");
+									return false;
                                                                 }
                                                         }
                                         }
 					})
-					misc.add(rg);
+					console.log("returning rg");
+					return rg;
+				}
+				console.log("adding a new rev dialogue in");
+				listPanel.add(createRevDiag());
 
 
-}
+			}
 });
