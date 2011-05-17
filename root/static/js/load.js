@@ -1,5 +1,5 @@
 Ext.Loader.setConfig({enabled: true});
-Ext.Loader.setPath('Ext.hg', '/static/js/hg')
+Ext.Loader.setPath('Ext.hg', '/static/js/hg');
 
 Ext.require([
     'Ext.form.*',
@@ -697,8 +697,11 @@ Ext.onReady( function() {
 				html: "Link to this: http://hg.fr.am:3002/#"+id+"<br /><br />"+content,
 				height: Ext.getBody().getViewSize().height,
 				listeners: {
-					mousedown: {
-						fn: function() { alert('hai'); }
+					beforeactivate: {
+						fn: function(me) {
+							var ev = Ext.EventObject.browserEvent;
+							console.info(ev);
+						}
 					}
 				}
 			});
