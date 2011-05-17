@@ -370,7 +370,6 @@ Ext.onReady( function() {
 				tooltip: "Fork",
 				id: "forkIcon",
 				handler: function(grid, rowIndex, colIndex) {
-					console.log("hasCmp: "+hasCmp);
 					if(hasCmp) { return; }
 					hasCmp = true;
 					rec = pastes.getAt(rowIndex);
@@ -481,7 +480,6 @@ Ext.onReady( function() {
 				getClass: function(v, m, rec, r, c, s) {
 				},
                                 handler: function(grid, rowIndex, colIndex) {
-					console.log("hasCmp: "+hasCmp);
 					if(hasCmp) { return; }
 					hasCmp = true;
                                         rec = pastes.getAt(rowIndex);
@@ -592,13 +590,10 @@ Ext.onReady( function() {
   	if(i.id == "list-action") {
 		return;
 	}
-	console.log("looks like it's time to check for revisions");
 	Paste.hasRevision({id : e.data.id} , function(r) {
 		if(r.answer > 0) {
-			console.log('we haz revizion');
 			revDialog(e.data)
 		} else {
-			console.log('we haz no revizion');
 			addPaste(e.data.id);
 		}
 	})
@@ -608,7 +603,6 @@ Ext.onReady( function() {
     list = generateList();
 			
     function closeTab(cmp, e) {
-	console.info(e);
     }
     tabs = Ext.create("Ext.tab.Panel", {
 		region: "center",
@@ -679,7 +673,7 @@ Ext.onReady( function() {
     }
     function addPaste (paste) {
 	id = paste;
-	
+	if(Ext.getCmp("paste-"+id)) { return false; }
 	Paste.getPaste(id,function(e) {
 		if(e.error) {
 			Ext.Msg.alert("Error",e.error);
@@ -699,13 +693,17 @@ Ext.onReady( function() {
 				listeners: {
 					beforeactivate: {
 						fn: function(me) {
-							var ev = Ext.EventObject.browserEvent;
-							console.info(ev);
 						}
 					}
 				}
 			});
-			tabs.add(tab).show()
+			tabs.add(tab).show();
+			tab.tab.el.dom.onmousedown = function(ev) {
+				if(ev.which == 2) {
+					tabs.remove("paste-"+id);
+				}
+			};
+				
 		}
 	})
     }
@@ -725,9 +723,7 @@ Ext.onReady( function() {
 					});
 					revs.load()
 					id = data.id
-					console.log("creating dialogue");
                                         function createRevDiag() {
-						console.log("in create rev diag");
 						var rg = null;
 						rg = Ext.create("Ext.grid.Panel",{
 						region: "west",
@@ -759,26 +755,20 @@ Ext.onReady( function() {
                                                 listeners: {
 								cellclick: {
 								fn: function(g,r,c,e) {
-									console.log("cellclick addpaste");
 									addPaste(e.data.id)
-										console.log("destroying rg");
 										rg.destroy();
                                                                }
 							},
                                                         afterrender: {
                                                                 fn: function() {
-									  console.log("in afterrender, going to animate list to 0");
 									  list.animate({
 										duration: 250,
 										to: { opacity: 0 },
 										listeners: {
 											afteranimate: {
 												fn: function() {
-													console.log("done animating list to 0, removing list and adding rg");
 													listPanel.remove(list);
 													listPanel.add(rg);
-													console.log("animating rg to 1");
-													console.info(rg);
 													a = rg.animate({
 														duration: 250,
 														to: {
@@ -787,18 +777,14 @@ Ext.onReady( function() {
 														listeners: { 
 															beforeanimate: {
 																fn: function() {
-																	console.log("rg beforeanim");
 																}
 															},
 															afteranimate: { 
 																fn: function() { 
-																	console.log("animated rg to 1") 
 																} 
 															} 
 														}
 													})
-													console.info(a);
-													console.log('tee heee');
 												}
 											}
 										}
@@ -808,8 +794,6 @@ Ext.onReady( function() {
                                                         beforedestroy: {
                                                                 fn: function() {
 										if(rev) { return false; } 
-										console.log("before destroy");
-										console.log("animating rg to 0");
                                                                                 rg.animate({
                                                                                         duration: 250,
                                                                                         to: {
@@ -819,30 +803,22 @@ Ext.onReady( function() {
                                                                                                 afteranimate: {
 													fn: function() {
 														rev = true;
-														console.log("rg animated to 0");
-														console.log("regen list");
 														list = generateList();
-														console.log("remove rg, add list");
 														listPanel.remove(rg);
 														listPanel.add(list);
-														console.log("animate list to 1");
-														list.animate({ duration: 250, to: { opacity: 1 }, listeners: { afteranimate: { fn: function() { console.log("list animated to 1"); } } } });
-														console.log("destroying rg");
+														list.animate({ duration: 250, to: { opacity: 1 }, listeners: { afteranimate: { fn: function() {  } } } });
 														rev = false;
                                                                                                         }
                                                                                                 }
                                                                                         }
                                                                                 })
-									console.log("returning false");
 									return false;
                                                                 }
                                                         }
                                         }
 					})
-					console.log("returning rg");
 					return rg;
 				}
-				console.log("adding a new rev dialogue in");
 				listPanel.add(createRevDiag());
 
 
