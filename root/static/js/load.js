@@ -366,7 +366,7 @@ Ext.onReady( function() {
 			xtype: 'actioncolumn',
 			id: "list-action",
 			items: [{
-				icon: "/static/icons/document-new.png",
+				icon: "/static/icons/script_code.png",
 				tooltip: "Fork",
 				id: "forkIcon",
 				handler: function(grid, rowIndex, colIndex) {
@@ -474,7 +474,7 @@ Ext.onReady( function() {
 					
 				}
 			}, {
-                                icon: "/static/icons/document-new.png",
+                                icon: "/static/icons/script_code_red.png",
                                 tooltip: "New revision",
 				id: "revIcon",
 				getClass: function(v, m, rec, r, c, s) {
