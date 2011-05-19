@@ -1,1 +1,8 @@
-$VAR1 = undef;
+$VAR1 = {
+          'email' => 'admin@hg.fr.am',
+          'password' => 'a1347cc0189410ce3fe5c6e2b9ed586b',
+          'last_paste' => undef,
+          'name' => 'Admini Strator',
+          'id' => '1',
+          'username' => 'admin'
+        };

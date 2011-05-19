@@ -128,10 +128,15 @@ sub register :Direct :DirectArgs(1) {
 		$json = { error => "The username you picked is already in use.", errno => 30 };
 	}
 	else {
-		$c->model("Paste::user")->create({
+		my $row = $c->model("Paste::user")->create({
 				username => $username,
 				email    => $email,
 				password => md5_hex($pass),
+		});
+		my $id = $row->{_column_data}->{id};
+		$c->model("Paste::user_role")->create({
+			user_id => $id,
+			role_id => 1
 		});
 		$json = { msg => "Your account was successfully created." };
 	}

@@ -135,6 +135,10 @@ __PACKAGE__->belongs_to(
   },
 );
 
+__PACKAGE__->many_to_many(
+	roles => "user_roles",
+	'role_id'
+);
 
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:20:00
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N3UMMQwlLTcmARj554kaNA

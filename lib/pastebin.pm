@@ -21,10 +21,14 @@ use Catalyst qw/
     ConfigLoader
     Static::Simple
 
+    StackTrace
+
     Email
     Observe
 
     Authentication
+    Authentication::Credential::Password
+    Authorization::Roles
 
     Session
     Session::Store::FastMmap
@@ -59,7 +63,6 @@ __PACKAGE__->config(
    # ));
 
 
-
 __PACKAGE__->config->{'Plugin::Authentication'} = {
 	default => {
 		class		=>	'SimpleDB',
@@ -67,7 +70,6 @@ __PACKAGE__->config->{'Plugin::Authentication'} = {
 		password_type	=>	'clear'
 	},
 };
-
 
 # Start the application
 __PACKAGE__->setup();

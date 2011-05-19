@@ -30,11 +30,22 @@ The root page (/)
 
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
-    warn Dumper($c->session->{__user});
-    $c->stash(template=>"root/index.html");
+    my $msg;
+    warn "food";
+    open my $f, ">ff";
+    print $f Dumper($c->user);
+    close $f;
+    warn Dumper($c->user);
+    warn "food";
+    $c->stash(template=>"root/index.html",msg=>$msg);
 	
 
     # Hello World
+}
+
+sub derp :Path('/derp') :Public {
+	my ($self, $c) = @_;
+	$c->stash(template=>"derp.html",derp=>Dumper($c));
 }
 
 
