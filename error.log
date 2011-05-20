@@ -1,0 +1,126 @@
+Couldn't load class (pastebin) because: Couldn't instantiate component "pastebin::Model::Paste", "Couldn't load class (pastebin::Schema::Paste) because: DBIx::Class::Row::throw_exception(): Can't locate Paste/UserRole.pm in @INC (@INC contains: /var/catalyst/pastebin/script/../lib /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld /opt/perl/lib/site_perl/5.12.3 /opt/perl/lib/5.12.3/x86_64-linux-thread-multi-ld /opt/perl/lib/5.12.3 .) at /opt/perl/lib/site_perl/5.12.3/Class/C3/Componentised.pm line 147. at /opt/perl/lib/site_perl/5.12.3/Class/C3/Componentised.pm line 152
+Compilation failed in require at /opt/perl/lib/site_perl/5.12.3/Class/C3/Componentised.pm line 147. at /opt/perl/lib/site_perl/5.12.3/DBIx/Class/Schema.pm line 1071
+	DBIx::Class::Schema::throw_exception('pastebin::Schema::Paste', 'DBIx::Class::Row::throw_exception(): Can\'t locate Paste/User...') called at /opt/perl/lib/site_perl/5.12.3/Class/C3/Componentised.pm line 152
+	Class::C3::Componentised::ensure_class_loaded('pastebin::Schema::Paste', 'pastebin::Schema::Paste::Result::Role') called at /opt/perl/lib/site_perl/5.12.3/DBIx/Class/Schema.pm line 247
+	DBIx::Class::Schema::load_namespaces('pastebin::Schema::Paste') called at /var/catalyst/pastebin/script/../lib/pastebin/Schema/Paste.pm line 10
+	require pastebin/Schema/Paste.pm called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 117
+	Class::MOP::__ANON__() called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 71
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 67
+	Try::Tiny::try('CODE(0xcde2508)', 'Try::Tiny::Catch=REF(0xcd65298)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 128
+	Class::MOP::load_first_existing_class('pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 140
+	Class::MOP::load_class('pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Model/DBIC/Schema/Types.pm line 21
+	Catalyst::Model::DBIC::Schema::Types::__ANON__('pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/TypeCoercion.pm line 65
+	Moose::Meta::TypeCoercion::__ANON__('pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/TypeCoercion.pm line 99
+	Moose::Meta::TypeCoercion::coerce('Moose::Meta::TypeCoercion=HASH(0xca8a128)', 'pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/TypeConstraint.pm line 93
+	Moose::Meta::TypeConstraint::coerce('Moose::Meta::TypeConstraint=HASH(0xcb05940)', 'pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/MooseX/Types/TypeDecorator.pm line 206
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/MooseX/Types/TypeDecorator.pm line 205
+	MooseX::Types::TypeDecorator::AUTOLOAD('MooseX::Types::TypeDecorator=HASH(0xca43e58)', 'pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Attribute.pm line 1128
+	Moose::Meta::Attribute::_coerce_and_verify('Moose::Meta::Attribute=HASH(0xcb7c3c8)', 'pastebin::Schema::Paste', 'pastebin::Model::Paste=HASH(0xcde2370)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Attribute.pm line 491
+	Moose::Meta::Attribute::initialize_instance_slot('Moose::Meta::Attribute=HASH(0xcb7c3c8)', 'Moose::Meta::Instance=HASH(0xcde2628)', 'pastebin::Model::Paste=HASH(0xcde2370)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Class.pm line 524
+	Class::MOP::Class::_construct_instance('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Class.pm line 497
+	Class::MOP::Class::new_object('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Class.pm line 224
+	Moose::Meta::Class::new_object('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Object.pm line 28
+	Moose::Object::new('pastebin::Model::Paste', 'pastebin', 'HASH(0xcb56b20)') called at constructor Catalyst::Model::DBIC::Schema::new (defined at /opt/perl/lib/site_perl/5.12.3/Catalyst/Model/DBIC/Schema.pm line 585) line 4
+	Catalyst::Model::DBIC::Schema::new('pastebin::Model::Paste', 'pastebin', 'HASH(0xcb56b20)') called at /opt/perl/lib/site_perl/5.12.3/MooseX/Traits/Pluggable.pm line 139
+	MooseX::Traits::Pluggable::_build_instance_with_traits('pastebin::Model::Paste', 'pastebin::Model::Paste', 'pastebin') called at /opt/perl/lib/site_perl/5.12.3/MooseX/Traits/Pluggable.pm line 97
+	MooseX::Traits::Pluggable::new_with_traits('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2178)') called at /opt/perl/lib/site_perl/5.12.3/CatalystX/Component/Traits.pm line 145
+	CatalystX::Component::Traits::COMPONENT('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Method/Wrapped.pm line 50
+	Class::MOP::Method::Wrapped::__ANON__('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Method/Wrapped.pm line 91
+	Catalyst::Model::DBIC::Schema::COMPONENT('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2525
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2525
+	Catalyst::setup_component('pastebin', 'pastebin::Model::Paste') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2452
+	Catalyst::setup_components('pastebin') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 1179
+	Catalyst::setup('pastebin') called at /var/catalyst/pastebin/script/../lib/pastebin.pm line 76
+	require pastebin.pm called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 117
+	Class::MOP::__ANON__() called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 71
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 67
+	Try::Tiny::try('CODE(0xbe1d5f8)', 'Try::Tiny::Catch=REF(0xbe765c8)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 128
+	Class::MOP::load_first_existing_class('pastebin') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 140
+	Class::MOP::load_class('pastebin') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/ScriptRole.pm line 48
+	Catalyst::ScriptRole::_run_application('Catalyst::Script::Server=HASH(0xb509e10)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Script/Server.pm line 142
+	Catalyst::Script::Server::__ANON__() called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Restarter/Forking.pm line 20
+	Catalyst::Restarter::Forking::_fork_and_start('Catalyst::Restarter::Forking=HASH(0xbc74340)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Restarter.pm line 89
+	Catalyst::Restarter::run_and_watch('Catalyst::Restarter::Forking=HASH(0xbc74340)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Script/Server.pm line 189
+	Catalyst::Script::Server::run('Catalyst::Script::Server=HASH(0xb509e10)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/ScriptRunner.pm line 20
+	Catalyst::ScriptRunner::run('Catalyst::ScriptRunner', 'pastebin', 'Server') called at script/pastebin_server.pl line 8
+Compilation failed in require at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 117.
+ at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 123
+	Class::MOP::__ANON__('DBIx::Class::Row::throw_exception(): Can\'t locate Paste/User...') called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 100
+	Try::Tiny::try('CODE(0xcde2508)', 'Try::Tiny::Catch=REF(0xcd65298)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 128
+	Class::MOP::load_first_existing_class('pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 140
+	Class::MOP::load_class('pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Model/DBIC/Schema/Types.pm line 21
+	Catalyst::Model::DBIC::Schema::Types::__ANON__('pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/TypeCoercion.pm line 65
+	Moose::Meta::TypeCoercion::__ANON__('pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/TypeCoercion.pm line 99
+	Moose::Meta::TypeCoercion::coerce('Moose::Meta::TypeCoercion=HASH(0xca8a128)', 'pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/TypeConstraint.pm line 93
+	Moose::Meta::TypeConstraint::coerce('Moose::Meta::TypeConstraint=HASH(0xcb05940)', 'pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/MooseX/Types/TypeDecorator.pm line 206
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/MooseX/Types/TypeDecorator.pm line 205
+	MooseX::Types::TypeDecorator::AUTOLOAD('MooseX::Types::TypeDecorator=HASH(0xca43e58)', 'pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Attribute.pm line 1128
+	Moose::Meta::Attribute::_coerce_and_verify('Moose::Meta::Attribute=HASH(0xcb7c3c8)', 'pastebin::Schema::Paste', 'pastebin::Model::Paste=HASH(0xcde2370)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Attribute.pm line 491
+	Moose::Meta::Attribute::initialize_instance_slot('Moose::Meta::Attribute=HASH(0xcb7c3c8)', 'Moose::Meta::Instance=HASH(0xcde2628)', 'pastebin::Model::Paste=HASH(0xcde2370)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Class.pm line 524
+	Class::MOP::Class::_construct_instance('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Class.pm line 497
+	Class::MOP::Class::new_object('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Class.pm line 224
+	Moose::Meta::Class::new_object('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Object.pm line 28
+	Moose::Object::new('pastebin::Model::Paste', 'pastebin', 'HASH(0xcb56b20)') called at constructor Catalyst::Model::DBIC::Schema::new (defined at /opt/perl/lib/site_perl/5.12.3/Catalyst/Model/DBIC/Schema.pm line 585) line 4
+	Catalyst::Model::DBIC::Schema::new('pastebin::Model::Paste', 'pastebin', 'HASH(0xcb56b20)') called at /opt/perl/lib/site_perl/5.12.3/MooseX/Traits/Pluggable.pm line 139
+	MooseX::Traits::Pluggable::_build_instance_with_traits('pastebin::Model::Paste', 'pastebin::Model::Paste', 'pastebin') called at /opt/perl/lib/site_perl/5.12.3/MooseX/Traits/Pluggable.pm line 97
+	MooseX::Traits::Pluggable::new_with_traits('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2178)') called at /opt/perl/lib/site_perl/5.12.3/CatalystX/Component/Traits.pm line 145
+	CatalystX::Component::Traits::COMPONENT('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Method/Wrapped.pm line 50
+	Class::MOP::Method::Wrapped::__ANON__('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Method/Wrapped.pm line 91
+	Catalyst::Model::DBIC::Schema::COMPONENT('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2525
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2525
+	Catalyst::setup_component('pastebin', 'pastebin::Model::Paste') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2452
+	Catalyst::setup_components('pastebin') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 1179
+	Catalyst::setup('pastebin') called at /var/catalyst/pastebin/script/../lib/pastebin.pm line 76
+	require pastebin.pm called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 117
+	Class::MOP::__ANON__() called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 71
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 67
+	Try::Tiny::try('CODE(0xbe1d5f8)', 'Try::Tiny::Catch=REF(0xbe765c8)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 128
+	Class::MOP::load_first_existing_class('pastebin') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 140
+	Class::MOP::load_class('pastebin') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/ScriptRole.pm line 48
+	Catalyst::ScriptRole::_run_application('Catalyst::Script::Server=HASH(0xb509e10)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Script/Server.pm line 142
+	Catalyst::Script::Server::__ANON__() called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Restarter/Forking.pm line 20
+	Catalyst::Restarter::Forking::_fork_and_start('Catalyst::Restarter::Forking=HASH(0xbc74340)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Restarter.pm line 89
+	Catalyst::Restarter::run_and_watch('Catalyst::Restarter::Forking=HASH(0xbc74340)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Script/Server.pm line 189
+	Catalyst::Script::Server::run('Catalyst::Script::Server=HASH(0xb509e10)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/ScriptRunner.pm line 20
+	Catalyst::ScriptRunner::run('Catalyst::ScriptRunner', 'pastebin', 'Server') called at script/pastebin_server.pl line 8
+ at /opt/perl/lib/site_perl/5.12.3/MooseX/Types/TypeDecorator.pm line 208
+	MooseX::Types::TypeDecorator::AUTOLOAD('MooseX::Types::TypeDecorator=HASH(0xca43e58)', 'pastebin::Schema::Paste') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Attribute.pm line 1128
+	Moose::Meta::Attribute::_coerce_and_verify('Moose::Meta::Attribute=HASH(0xcb7c3c8)', 'pastebin::Schema::Paste', 'pastebin::Model::Paste=HASH(0xcde2370)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Attribute.pm line 491
+	Moose::Meta::Attribute::initialize_instance_slot('Moose::Meta::Attribute=HASH(0xcb7c3c8)', 'Moose::Meta::Instance=HASH(0xcde2628)', 'pastebin::Model::Paste=HASH(0xcde2370)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Class.pm line 524
+	Class::MOP::Class::_construct_instance('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Class.pm line 497
+	Class::MOP::Class::new_object('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Meta/Class.pm line 224
+	Moose::Meta::Class::new_object('Moose::Meta::Class=HASH(0xca3cb10)', 'HASH(0xcde2160)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Moose/Object.pm line 28
+	Moose::Object::new('pastebin::Model::Paste', 'pastebin', 'HASH(0xcb56b20)') called at constructor Catalyst::Model::DBIC::Schema::new (defined at /opt/perl/lib/site_perl/5.12.3/Catalyst/Model/DBIC/Schema.pm line 585) line 4
+	Catalyst::Model::DBIC::Schema::new('pastebin::Model::Paste', 'pastebin', 'HASH(0xcb56b20)') called at /opt/perl/lib/site_perl/5.12.3/MooseX/Traits/Pluggable.pm line 139
+	MooseX::Traits::Pluggable::_build_instance_with_traits('pastebin::Model::Paste', 'pastebin::Model::Paste', 'pastebin') called at /opt/perl/lib/site_perl/5.12.3/MooseX/Traits/Pluggable.pm line 97
+	MooseX::Traits::Pluggable::new_with_traits('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2178)') called at /opt/perl/lib/site_perl/5.12.3/CatalystX/Component/Traits.pm line 145
+	CatalystX::Component::Traits::COMPONENT('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Method/Wrapped.pm line 50
+	Class::MOP::Method::Wrapped::__ANON__('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP/Method/Wrapped.pm line 91
+	Catalyst::Model::DBIC::Schema::COMPONENT('pastebin::Model::Paste', 'pastebin', 'HASH(0xcde2058)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2525
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2525
+	Catalyst::setup_component('pastebin', 'pastebin::Model::Paste') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 2452
+	Catalyst::setup_components('pastebin') called at /opt/perl/lib/site_perl/5.12.3/Catalyst.pm line 1179
+	Catalyst::setup('pastebin') called at /var/catalyst/pastebin/script/../lib/pastebin.pm line 76
+	require pastebin.pm called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 117
+	Class::MOP::__ANON__() called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 71
+	eval {...} called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 67
+	Try::Tiny::try('CODE(0xbe1d5f8)', 'Try::Tiny::Catch=REF(0xbe765c8)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 128
+	Class::MOP::load_first_existing_class('pastebin') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 140
+	Class::MOP::load_class('pastebin') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/ScriptRole.pm line 48
+	Catalyst::ScriptRole::_run_application('Catalyst::Script::Server=HASH(0xb509e10)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Script/Server.pm line 142
+	Catalyst::Script::Server::__ANON__() called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Restarter/Forking.pm line 20
+	Catalyst::Restarter::Forking::_fork_and_start('Catalyst::Restarter::Forking=HASH(0xbc74340)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Restarter.pm line 89
+	Catalyst::Restarter::run_and_watch('Catalyst::Restarter::Forking=HASH(0xbc74340)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Script/Server.pm line 189
+	Catalyst::Script::Server::run('Catalyst::Script::Server=HASH(0xb509e10)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/ScriptRunner.pm line 20
+	Catalyst::ScriptRunner::run('Catalyst::ScriptRunner', 'pastebin', 'Server') called at script/pastebin_server.pl line 8"Compilation failed in require at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 117.
+ at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 123
+	Class::MOP::__ANON__('Couldn\'t instantiate component "pastebin::Model::Paste", "Co...') called at /opt/perl/lib/site_perl/5.12.3/Try/Tiny.pm line 100
+	Try::Tiny::try('CODE(0xbe1d5f8)', 'Try::Tiny::Catch=REF(0xbe765c8)') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 128
+	Class::MOP::load_first_existing_class('pastebin') called at /opt/perl/lib/site_perl/5.12.3/x86_64-linux-thread-multi-ld/Class/MOP.pm line 140
+	Class::MOP::load_class('pastebin') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/ScriptRole.pm line 48
+	Catalyst::ScriptRole::_run_application('Catalyst::Script::Server=HASH(0xb509e10)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Script/Server.pm line 142
+	Catalyst::Script::Server::__ANON__() called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Restarter/Forking.pm line 20
+	Catalyst::Restarter::Forking::_fork_and_start('Catalyst::Restarter::Forking=HASH(0xbc74340)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Restarter.pm line 89
+	Catalyst::Restarter::run_and_watch('Catalyst::Restarter::Forking=HASH(0xbc74340)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/Script/Server.pm line 189
+	Catalyst::Script::Server::run('Catalyst::Script::Server=HASH(0xb509e10)') called at /opt/perl/lib/site_perl/5.12.3/Catalyst/ScriptRunner.pm line 20
+	Catalyst::ScriptRunner::run('Catalyst::ScriptRunner', 'pastebin', 'Server') called at script/pastebin_server.pl line 8

@@ -30,14 +30,10 @@ The root page (/)
 
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
-    my $msg;
-    warn "food";
     open my $f, ">ff";
     print $f Dumper($c->user);
     close $f;
-    warn Dumper($c->user);
-    warn "food";
-    $c->stash(template=>"root/index.html",msg=>$msg);
+    $c->stash(template=>"root/index.html");
 	
 
     # Hello World

@@ -97,7 +97,7 @@ sub register :Direct :DirectArgs(1) {
 	$c->res->content_type("application/json");
 	warn Dumper($opts);
 	my $username = $opts->{username};
-	my $email = @{$opts->{email}};
+	my $email = $opts->{email};
 	my ($pass, $passc)   = @{$opts->{password}};
 	my $json;
 	if(!defined $username) {
@@ -134,7 +134,7 @@ sub register :Direct :DirectArgs(1) {
 				password => md5_hex($pass),
 		});
 		my $id = $row->{_column_data}->{id};
-		$c->model("Paste::user_role")->create({
+		$c->model("Paste::userrole")->create({
 			user_id => $id,
 			role_id => 1
 		});

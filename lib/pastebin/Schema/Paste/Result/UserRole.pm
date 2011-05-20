@@ -66,17 +66,21 @@ Related object: L<pastebin::Schema::Paste::Result::User>
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "user",
-  "pastebin::Schema::Paste::Result::User",
-  { id => "user_id" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
-);
+__PACKAGE__->set_primary_key(qw/user_id role_id/);
+
+#__PACKAGE__->belongs_to(
+#  "user",
+#  "pastebin::Schema::Paste::Result::User",
+#  { id => "user_id" },
+#  {
+#    is_deferrable => 1,
+#    join_type     => "LEFT",
+#    on_delete     => "CASCADE",
+#    on_update     => "CASCADE",
+#  },
+#);
+__PACKAGE__->belongs_to(user => 'pastebin::Schema::Paste::Result::User', 'user_id');
+__PACKAGE__->belongs_to(role => 'pastebin::Schema::Paste::Result::Role', 'role_id');
 
 =head2 role
 

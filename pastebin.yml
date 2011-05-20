@@ -1,0 +1,22 @@
+--- 
+authentication:
+  default_realm: default
+  realms: 
+    default: 
+      credential: 
+        class: Password
+        password_field: password
+        password_type: clear
+      store: 
+        class: "DBIx::Class"
+        id_field: id
+        role_field: role
+        role_relation: roles
+        user_class: "Paste::User"
+authorization: 
+  dbic: 
+    role_class: "Paste::Role"
+    role_field: role
+    role_rel: map_user_role
+    user_role_user_field: user_id
+name: pastebin

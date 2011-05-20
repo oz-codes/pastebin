@@ -47,7 +47,7 @@ __PACKAGE__->add_columns(
     sequence          => "roles_id_seq",
   },
   "role",
-  { data_type => "char", is_nullable => 1, size => 64 },
+  { data_type => "varchar", is_nullable => 1, size => 64 },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -61,12 +61,15 @@ Related object: L<pastebin::Schema::Paste::Result::UserRole>
 
 =cut
 
-__PACKAGE__->has_many(
-  "user_roles",
-  "pastebin::Schema::Paste::Result::UserRole",
-  { "foreign.role_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
+#__PACKAGE__->has_many(
+#  "user_roles",
+#  "pastebin::Schema::Paste::Result::UserRole",
+#  { "foreign.role_id" => "self.id" },
+#  { cascade_copy => 0, cascade_delete => 0 },
+#);
+
+
+__PACKAGE__->has_many(map_user_role => "pastebin::Schema::Paste::Result::UserRole", "role_id");
 
 
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:20:00

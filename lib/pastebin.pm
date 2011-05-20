@@ -27,8 +27,9 @@ use Catalyst qw/
     Observe
 
     Authentication
-    Authentication::Credential::Password
+
     Authorization::Roles
+    Authorization::ACL
 
     Session
     Session::Store::FastMmap
@@ -58,18 +59,20 @@ __PACKAGE__->config(
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
 );
+
+__PACKAGE__->config( "Plugin::ConfigLoader" => { file => "pastebin.yml" } );
    # __PACKAGE__->apply_request_class_roles(qw(
    #     Catalyst::TraitFor::Request::XMLHttpRequest
    # ));
 
 
-__PACKAGE__->config->{'Plugin::Authentication'} = {
-	default => {
-		class		=>	'SimpleDB',
-		user_model	=>	'Paste::user',
-		password_type	=>	'clear'
-	},
-};
+#__PACKAGE__->config->{'Plugin::Authentication'} = {
+#	default => {
+#		class		=>	'SimpleDB',
+#		user_model	=>	'Paste::user',
+#		password_type	=>	'clear'
+#	},
+#};
 
 # Start the application
 __PACKAGE__->setup();

@@ -334,6 +334,53 @@ sub getPaste : Direct : DirectArgs(1) {
 	$c->stash(template=>"json/general.json",json=>$json);		
 }
 
+sub delete : Direct : DirectArgs(1) {
+	my ($self, $c) = @_;
+	$c->res->content_type("application/json");
+	my $opts = $c->req->data->[0];
+	my $pid = $opts->{"pid"};
+	my $json;
+	if(!defined $pid) {
+		$json = { error => "You did not provide a post ID." };
+	} else {
+		my $paste = $c->model("Paste::paste")->find({id => $pid});
+		my $title = $paste->{_column_data}->{title};
+		my $oid = $paste->{_column_data}->{user_id};
+		my $candel;
+		if($c->check_user_roles("mod") || $oid == $c->session->{__user}->{id}) {
+			$paste->delete();
+			$json = { msg => "$title has been deleted." };
+		} else {
+			$json = { error => "You do not have permission to delete this." };
+		}
+	}
+	$c->stash(template=>"json/general.json",json=>$json);
+}	
+
+sub canDelete : Direct : DirectArgs(1) {
+	my ($self, $c) = @_;
+	$c->res->content_type("application/json");
+	my $opts = $c->req->data->[0];
+	my $pid = $opts->{"pid"};
+	my $json;
+	if(!defined $pid) {
+		$json = { error => "You did not provide a post ID." };
+	} else {
+		my $paste = $c->model("Paste::paste")->find({id => $pid});
+		my $oid = $paste->{_column_data}->{user_id};
+		my $candel;
+		if($c->check_user_roles("mod")) {
+			$candel = 1;
+		} elsif($oid == $c->session->{__user}->{id}) {
+			$candel = 1;
+		} else {
+			$candel = 0;
+		}
+		$json = { candel => $candel };
+	}
+	$c->stash(template=>"json/general.json",json=>$json);
+}	
+
 sub jarr : Method {
         my $a = shift;
         my @arr = @{$a};

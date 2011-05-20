@@ -135,9 +135,11 @@ __PACKAGE__->belongs_to(
   },
 );
 
+__PACKAGE__->has_many(map_user_role => "pastebin::Schema::Paste::Result::UserRole","user_id");
+
 __PACKAGE__->many_to_many(
-	roles => "user_roles",
-	'role_id'
+	roles => "map_user_role",
+	'role'
 );
 
 # Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:20:00

@@ -180,7 +180,7 @@ Ext.onReady( function() {
 											Ext.Msg.alert("Error",r.error);
 										} else {
 											Ext.Msg.alert("Notice",r.msg);
-											Auth.login({username: username, password: pass});
+											Auth.in({username: username, password: pass});
 											tabs.removeTab(register)
 										}
 									})
@@ -338,6 +338,7 @@ Ext.onReady( function() {
 	}]
 	})
     function generateList() { 
+				
 	list =  Ext.create("Ext.grid.Panel", {
 	title: "Saved Pastes",
 	id: "pasteList",
@@ -584,6 +585,49 @@ Ext.onReady( function() {
 			}]
 		}
 		],
+		listeners: {
+			itemcontextmenu: {
+				fn: function(view,rec,item,index,event) {
+				console.info(event);
+				event.stopEvent();
+				Paste.canDelete({pid : rec.get("id")}, function(r) {
+					console.info(r);
+					var candel;
+					if(r.error || r.candel == 0) {
+						candel = true 
+					} else {
+						candel = false
+					}	
+					mnu = new Ext.menu.Menu({
+						items: [{
+							disabled: candel,
+							id: "delete-"+rec.get("id"),
+							icon: "/static/icons/delete_note.gif",
+							text: "Delete "+rec.get("title")
+						}],
+						listeners: {
+							click: {
+								fn: function(menu,item,e) {
+									if(item.disabled) { return false; }
+									Paste.delete({pid: rec.get("id")}, function(r) {
+										if(r.error) {
+											Ext.Msg.alert("Error",r.error);
+										} else {
+											Ext.Msg.alert("Notification",r.msg);
+											pastes.load();
+										}
+									});
+								}
+							}
+						}
+					});
+					x = event.browserEvent.x-10;
+					y = event.browserEvent.y-10;
+					mnu.showAt(x,y);
+					})
+				}
+			}
+		}
     });
     list.on("cellclick", function (g, r, c, e) {
 	if(c == 5) { return; }
