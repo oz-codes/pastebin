@@ -4,6 +4,7 @@ Ext.Loader.setPath('Ext.hg', '/static/js/hg');
 Ext.require([
     'Ext.form.*',
     'Ext.tab.*',
+    'Ext.direct.*',
     'Ext.data.*',
     'Ext.grid.*',
     'Ext.direct.*',
@@ -11,11 +12,62 @@ Ext.require([
 ]);
 
 Ext.onReady( function() {
+    bh = Ext.getBody().getViewSize().height
+    bw = Ext.getBody().getViewSize().width
+    function generateCtx(store) {
+    return function ctx(view,rec,item,index,event) {
+                                event.stopEvent();                                                              
+                                Paste.canDelete({pid : rec.get("id")}, function(r) {                            
+                                        var candel;                                                                             
+                                        if(r.error || r.candel == 0) {                                                          
+                                                candel = true                                                           
+                                        } else {                                                                        
+                                                candel = false                                                                  
+                                        }                                                                                       
+                                        if(Ext.getCmp("delete")) {                                                      
+                                                Ext.getCmp("delete").destroy();                                 
+                                        }                                                               
+                                        mnu = new Ext.menu.Menu({                               
+                                                items: [{                               
+                                                        disabled: candel,       
+                                                        id: "delete",   
+                                                        icon: "/static/icons/delete_note.gif",
+                                                        text: "Delete "+rec.get("title")
+                                                }, {
+							id: "reset",
+							icon: "/static/icons/page_refresh.png",
+							text: "Refresh list"
+						}],     
+                                                listeners: {    
+                                                        click: {                
+                                                                fn: function(menu,item,e) {
+									if(item.id == "delete") {
+										if(item.disabled) { return false; }
+										Paste.delete({pid: rec.get("id")}, function(r) {
+											if(r.error) {   
+												Ext.Msg.alert("Error",r.error);
+											} else {
+												Ext.Msg.alert("Notification",r.msg);
+												store.load();
+											}                               
+										});                                     
+									} else if(item.id == "reset") {
+										pastes.load();
+									}
+                                                                }                                               
+                                                        }                                                       
+                                                }                                                               
+                                        });                                                                     
+                                        x = event.getPageX()-10;                                        
+					console.log("revs: "+revs);
+                                        y = event.getPageY()-10;                                
+                                        mnu.showAt(x,y);                                
+                                        })
+			}
+	}
     rev = null;
     l = null
     hasCmp = false;
-    bw = Ext.getBody().getViewSize().width
-    bh = Ext.getBody().getViewSize().height
     Ext.QuickTips.init()
     Ext.define('UserList', {
 	extend: 'Ext.data.Model',
@@ -27,7 +79,7 @@ Ext.onReady( function() {
     Ext.define('PasteList', {
         extend: 'Ext.data.Model',
         fields: [
-	    "id", "title","created_on","updated_on","lang","user_id","revision","content"
+	    "id", "title","created_on","updated_on","lang","user_id","revision","content","hasrev","revs","revnum","ind"
         ]
     });
 
@@ -180,8 +232,15 @@ Ext.onReady( function() {
 											Ext.Msg.alert("Error",r.error);
 										} else {
 											Ext.Msg.alert("Notice",r.msg);
-											Auth.in({username: username, password: pass});
-											tabs.removeTab(register)
+											Auth.in({username: username, password: pass},function(j) {
+												if(j.error) {} else {
+													tabs.remove(register)
+													login.disable();
+													logout.enable();
+													newPaste.enable();
+													tabs.setActiveTab(newPaste)
+												}
+											});
 										}
 									})
 								     }
@@ -212,12 +271,17 @@ Ext.onReady( function() {
 					logout.enable();
 					newPaste.enable();
 					tabs.setActiveTab(Ext.getCmp("newPaste"));
+					Auth.isAdmin(function(r) {
+						if(r.answer == 1) {
+							addAdminTab();
+						}
+					})
+				}
 					/*tabs.add(logout);
 					tabs.remove(login,true);
 					tabs.refresh();*/
-                                }
-                        });
-                }
+                                })
+                        }
         }]
     });
     logout = Ext.create("Ext.panel.Panel",{
@@ -237,7 +301,8 @@ Ext.onReady( function() {
 					login.enable()
 					logout.disable();
 					newPaste.disable();
-					tabs.setActiveTab(Ext.getCmp("newPaste"));
+					tabs.setActiveTab(Ext.getCmp("loginTab"));
+					removeAdminTab();
 				/*	tabs.add(login);
                                         tabs.remove('logoutTab',true);*/
                                 }
@@ -370,23 +435,21 @@ Ext.onReady( function() {
 				icon: "/static/icons/script_code.png",
 				tooltip: "Fork",
 				id: "forkIcon",
+				getClass: function(v, m, rec, r, c, s) {
+					if(parseInt(rec.get("hasrev")) == 1) { return "hidden"; }
+				},
 				handler: function(grid, rowIndex, colIndex) {
-					if(hasCmp) { return; }
-					hasCmp = true;
-					rec = pastes.getAt(rowIndex);
-					height=tabs.getHeight();
+					Auth.loggedin(function(r) {
+						if(r.loggedin != 1) {} else {
+						rec = pastes.getAt(rowIndex);
+						if(Ext.getCmp("fork"+rec.get("id"))) { return false; }
 					    var fork = Ext.create("Ext.form.Panel",{
 						closable: true,
-						id: "auxPanel",
+						id: "fork"+rec.get("id"),
 						title: "Fork "+rec.get("title"),
-						height: bh*0.5,
-						waitMsgTarget: true,       
-						style: { opacity: 0 },
-						fieldDefaults: {
-						},
 						items: [{
 							xtype: 'fieldset',
-							id: "auxPanelForm",
+							id: "fork"+rec.get("id")+"Form",
 							title: 'Fork '+rec.get("title").replace(/\w*$/,""),
 							defaultType: 'textfield',
 							defaults: {
@@ -427,74 +490,34 @@ Ext.onReady( function() {
                                                                         } else {
                                                                                 Ext.Msg.alert("Notice",j.msg);
                                                                                 pastes.load();
-                                                                                height+=32;
-                                                                                Ext.getCmp("auxPanel").animate({
-                                                                                        duration: 1000,
-                                                                                        to: {
-                                                                                                opacity: 0
-                                                                                        }
-                                                                                });
+										tabs.remove(Ext.getCmp("fork"+rec.get("id")));
                                                                         }
                                                                 });
                                                         }
                                                 }]
 						}],
-						listeners: {
-							afterrender: {
-								fn: function() {
-									Ext.getCmp("auxPanel").animate({
-										duration: 1000,
-										to: {
-											opacity: 1
-										}
-									})
-								}
-							},
-							beforedestroy: {
-								fn: function() {
-										Ext.getCmp("auxPanel").animate({
-											duration: 1000,
-											to: {
-												opacity: 0
-											},
-											listeners: {
-												afteranimate: {
-													fn: function() {
-														hasCmp = false;
-														Ext.getCmp('auxPanel').getForm().reset();
-													}
-												}
-											}
-                                                                                })
-										return false;
-								}
-							}
-						}
 					})
-					misc.add(fork);
-					
+					tabs.add(fork);	
+					tabs.setActiveTab(fork);
 				}
-			}, {
+				})
+			}}, {
                                 icon: "/static/icons/script_code_red.png",
                                 tooltip: "New revision",
 				id: "revIcon",
 				getClass: function(v, m, rec, r, c, s) {
+					if(rec.get("hasrev") == 1) { return "hidden"; }
 				},
                                 handler: function(grid, rowIndex, colIndex) {
-					if(hasCmp) { return; }
-					hasCmp = true;
+					Auth.loggedin(function(r) {
+						if(r.loggedin != 1) {} else {
                                         rec = pastes.getAt(rowIndex);
-                                        height=tabs.getHeight();
+					if(Ext.getCmp("rev"+rec.get("id"))) { return false; }
                                         Ext.core.DomHelper.insertAfter("ext",{tag: "div", id: "rev"});
                                             var rev = Ext.create("Ext.form.Panel",{
                                                 closable: true,
-                                                id: "auxPanel",
-						height: bh*0.5,
+                                                id: "rev"+rec.get("id"),
                                                 title: "New revision of "+rec.get("title"),
-                                                waitMsgTarget: true,
-                                                style: { opacity: 0 },
-                                                fieldDefaults: {
-                                                },
                                                 items: [{
                                                         xtype: 'fieldset',
                                                         title: 'New revision of '+rec.get("title").replace(/\w*$/,""),
@@ -537,49 +560,17 @@ Ext.onReady( function() {
                                                                         } else {
                                                                                 Ext.Msg.alert("Notice",j.msg);
                                                                                 pastes.load();
-                                                                                Ext.getCmp("auxPanel").animate({
-                                                                                        duration: 1000,
-                                                                                        to: {
-                                                                                                opacity: 0
-                                                                                        }
-                                                                                });
+										tabs.remove(rev)
                                                                         }
                                                                 });
                                                         }
 						}],
 						}],
-                                                listeners: {
-                                                        afterrender: {
-                                                                fn: function() {
-                                                                        Ext.getCmp("auxPanel").animate({
-                                                                                duration: 1000,
-                                                                                to: {
-                                                                                        opacity: 1
-                                                                                }
-                                                                        })
-                                                                }
-                                                        },
-                                                        beforedestroy: {
-                                                                fn: function() {
-                                                                                Ext.getCmp("auxPanel").animate({
-                                                                                        duration: 1000,
-                                                                                        to: {
-                                                                                                opacity: 0
-                                                                                        },
-											listeners: {
-                                                                                                afteranimate: {
-                                                                                                        fn: function() {
-														hasCmp = false;
-                                                                                                        }
-                                                                                                }
-                                                                                        }
-                                                                                })
-                                                                                return false;
-                                                                }
-                                                        }
-                                                }
                                         })
-					misc.add(rev);
+					tabs.add(rev);
+					tabs.setActiveTab(rev);
+				}
+				})
 
                                 }
 			}]
@@ -587,50 +578,12 @@ Ext.onReady( function() {
 		],
 		listeners: {
 			itemcontextmenu: {
-				fn: function(view,rec,item,index,event) {
-				console.info(event);
-				event.stopEvent();
-				Paste.canDelete({pid : rec.get("id")}, function(r) {
-					console.info(r);
-					var candel;
-					if(r.error || r.candel == 0) {
-						candel = true 
-					} else {
-						candel = false
-					}	
-					mnu = new Ext.menu.Menu({
-						items: [{
-							disabled: candel,
-							id: "delete-"+rec.get("id"),
-							icon: "/static/icons/delete_note.gif",
-							text: "Delete "+rec.get("title")
-						}],
-						listeners: {
-							click: {
-								fn: function(menu,item,e) {
-									if(item.disabled) { return false; }
-									Paste.delete({pid: rec.get("id")}, function(r) {
-										if(r.error) {
-											Ext.Msg.alert("Error",r.error);
-										} else {
-											Ext.Msg.alert("Notification",r.msg);
-											pastes.load();
-										}
-									});
-								}
-							}
-						}
-					});
-					x = event.browserEvent.x-10;
-					y = event.browserEvent.y-10;
-					mnu.showAt(x,y);
-					})
-				}
+				fn: generateCtx(pastes)
 			}
 		}
     });
     list.on("cellclick", function (g, r, c, e) {
-	if(c == 5) { return; }
+	if(c == 4) { return; }
   	if(i.id == "list-action") {
 		return;
 	}
@@ -672,7 +625,7 @@ Ext.onReady( function() {
 						if(opts[i] == "") { continue; }
 						addPaste(opts[i]);
 					}
-					Auth.loggedin(null,function(r) {
+					Auth.loggedin(function(r) {
 						if(r.loggedin == 1) {
 							logout.enable();
 							login.disable();
@@ -688,7 +641,8 @@ Ext.onReady( function() {
 			}
 		}
     });
-    misc = Ext.create("Ext.container.Container", {
+    userPanel = Ext.create("Ext.container.Container", {
+	layout: "hbox",
 	region: "south",
 	height: bh*0.5,
     })		
@@ -703,7 +657,7 @@ Ext.onReady( function() {
     items: [ 
 	listPanel,
 	tabs,
-	misc
+	userPanel
      ]
 });
 	
@@ -766,6 +720,20 @@ Ext.onReady( function() {
 					      }
 					});
 					revs.load()
+					function getPaste(id) {
+						var tot = pastes.getTotalCount();
+						var ret;
+						for(i=0;i<tot;i++) {
+							rec = pastes.getAt(i);
+							idd = parseInt(rec.get("id"));
+							if(idd == id) {
+								ret = rec;
+								break;
+							}
+						}
+						return ret;
+					}
+					datas = getPaste(data.id);
 					id = data.id
                                         function createRevDiag() {
 						var rg = null;
@@ -780,8 +748,8 @@ Ext.onReady( function() {
 						columns: [
 						    //new Ext.grid.RowNumberer({width: 31}),
 						    {
-						      dataIndex: "title",
-						      dtext: "revision",
+						      dataIndex: "revnum",
+						      text: "Revision",
 						      flex: 1
 						} , {
 						      dataIndex: "created_on",
@@ -795,14 +763,159 @@ Ext.onReady( function() {
 						      dataIndex: "user_id",
 						      text: "Posted by",
 						      flex: 1
-						 }],
-                                                listeners: {
-								cellclick: {
-								fn: function(g,r,c,e) {
-									addPaste(e.data.id)
-										rg.destroy();
-                                                               }
+						}, {
+							xtype: 'actioncolumn',
+			id: "list-action",
+			items: [{
+				icon: "/static/icons/script_code.png",
+				tooltip: "Fork",
+				id: "forkIcon",
+				handler: function(grid, rowIndex, colIndex) {
+					Auth.loggedin(function(r) {
+						if(r.loggedin != 1) {} else {
+						rec = grid.getStore().getAt(rowIndex);
+						if(Ext.getCmp("fork"+rec.get("id"))) { return false; }
+					    var fork = Ext.create("Ext.form.Panel",{
+						closable: true,
+						id: "fork"+rec.get("id"),
+						title: 'Fork '+rec.get("title")+(rec.get("revnum") != ""?" (revision "+rec.get("revnum")+")":""),
+						items: [{
+							xtype: 'fieldset',
+							id: "fork"+rec.get("id")+"Form",
+							title: 'Fork '+rec.get("title")+(rec.get("revnum") != ""?" (revision "+rec.get("revnum")+")":""),
+							defaultType: 'textfield',
+							defaults: {
+								width: bw*0.72,
 							},
+							items: [{
+								fieldLabel: "Title",
+								emptyText: "Title",
+								name: "ftitle",
+								id: 'ftitle',
+								value: "Fork of "+rec.get("title")
+							}, {
+								fieldLabel: "Post",
+								xtype: 'textareafield',
+								name: 'fpost',
+								id: 'fpost',
+								height: bh*0.3,
+								value: rec.get("content")
+							}, {
+								fieldLabel: 'Language',
+								name: 'flang',
+								xtype: 'displayfield',
+								id: 'flang',
+								value: rec.get("lang")
+							}, {
+								xtype: "button",
+								text: "Submit",
+                                                        handler: function() {
+                                                                var values = fork.getForm().getValues();
+                                                                var title = values.ftitle;
+                                                                var post = values.fpost;
+                                                                var lang = rec.get("lang")
+                                                                lang = lang.replace(/\s*$/,"");
+                                                                post = post.replace(/\s*$/,"");
+                                                                Paste.createFork({title: title, post: post, lang: lang, oldId: data.id}, function(j) {
+                                                                        if(j.error) {
+                                                                                Ext.Msg.alert("Error",j.error);
+                                                                        } else {
+                                                                                Ext.Msg.alert("Notice",j.msg);
+										pastes.load();
+										rg.destroy();	
+										tabs.remove(Ext.getCmp("fork"+rec.get("id")));
+                                                                        }
+                                                                });
+                                                        }
+                                                }]
+						}],
+					})
+					tabs.add(fork);	
+					tabs.setActiveTab(fork);
+				}
+				})
+			}}, {
+                                icon: "/static/icons/script_code_red.png",
+                                tooltip: "New revision",
+				id: "revIcon",
+				getClass: function(v, m, rec, r, c, s) {
+					ind = rec.get("ind");
+					revs = datas.get("revs")
+					if(ind != revs) { return "hidden" }
+				},
+                                handler: function(grid, rowIndex, colIndex) {
+					Auth.loggedin(function(r) {
+						if(r.loggedin != 1) {} else {
+                                        rec = grid.getStore().getAt(rowIndex);
+					if(Ext.getCmp("rev"+rec.get("id"))) { return false; }
+                                        Ext.core.DomHelper.insertAfter("ext",{tag: "div", id: "rev"});
+                                            var rev = Ext.create("Ext.form.Panel",{
+                                                closable: true,
+                                                id: "rev"+rec.get("id"),
+                                                title: "New revision of "+rec.get("title"),
+                                                items: [{
+                                                        xtype: 'fieldset',
+                                                        title: 'New revision of '+rec.get("title").replace(/\w*$/,""),
+                                                        defaultType: 'textfield',
+                                                        defaults: {
+								width: bw*0.72,
+                                                        },
+                                                        items: [{
+                                                                fieldLabel: "Title",
+                                                                name: "title",
+                                                                id: 'rtitle',
+								xtype: "displayfield",
+                                                                value: rec.get("title")
+                                                        }, {
+                                                                fieldLabel: "Post",
+                                                                xtype: 'textareafield',
+                                                                name: 'rpost',
+                                                                id: 'rpost',
+                                                                height: bh*0.3,
+                                                                value: rec.get("content")
+                                                        }, {
+                                                                fieldLabel: 'Language',
+                                                                name: 'rlang',
+                                                                xtype: 'displayfield',
+                                                                id: 'rlang',
+                                                                value: rec.get("lang")
+                                                        }, {
+								xtype: "button",
+								text: "Submit",
+								handler: function() {   
+                                                                var values = rev.getForm().getValues();
+                                                                var title = rec.get("title")                  
+                                                                var post = values.rpost;
+                                                                var lang = rec.get("lang")
+                                                                lang = lang.replace(/\s*$/,"");
+                                                                post = post.replace(/\s*$/,"");
+                                                                Paste.createRev({title: title, post: post, lang: lang, oldId: data.id}, function(j) {
+                                                                        if(j.error) {   
+                                                                                Ext.Msg.alert("Error",j.error);
+                                                                        } else {
+                                                                                Ext.Msg.alert("Notice",j.msg);
+										rg.destroy();
+										pastes.load();
+										grid.getStore().load();
+										tabs.remove(rev)
+                                                                        }
+                                                                });
+                                                        }
+						}],
+						}],
+                                        })
+					tabs.add(rev);
+					tabs.setActiveTab(rev);
+				}
+				})
+
+                                }
+			}]
+		}],
+                                                listeners: {
+								itemcontextmenu: {
+									fn: generateCtx(revs)
+								},
                                                         afterrender: {
                                                                 fn: function() {
 									  list.animate({
@@ -861,10 +974,151 @@ Ext.onReady( function() {
                                                         }
                                         }
 					})
+				 rg.on("cellclick", function (g, r, c, e) {
+					if(c == 4) { return false; }
+					else {
+						addPaste(e.data.id)
+					}
+				   });
 					return rg;
 				}
 				listPanel.add(createRevDiag());
 
 
 			}
+
+	function addAdminTab() {
+		admin = Ext.create("Ext.panel.Panel", {
+                                id: "adminpanel",
+                                title: "Admin",
+                                html: "yeah, we're boring here, soz :(",
+                                height: bh*0.5
+                        });
+			Ext.getCmp("funcpanel").add(admin);
+	}
+	function removeAdminTab() {
+		Ext.getCmp("funcpanel").remove(Ext.getCmp("adminpanel"));
+	}
+	Auth.isAdmin(function(r) {
+		var panel
+		var cont = Ext.create("Ext.tab.Panel", {
+			id: "funcpanel",
+			width: bw*0.5
+		})
+		if(r.answer == 1) {
+			addAdminTab();
+		}
+			//build user panel
+	search  = Ext.create("Ext.form.Panel",{
+	id: "searchTab",
+	title: "Search",
+	height: bh*0.5,
+	items: [{
+                xtype: 'fieldset',
+                title: 'Search',
+		defaults: {
+			anchor: '100%'
+		},
+                items: [{
+                        fieldLabel: "Search",
+			xtype: "textfield",
+                        emptyText: "Query...",
+                        name: "query",
+                        id: 'query',
+			validator: function(r) {
+				if(r == "") {
+					return "Please provide something to search by.";
+				} else if(r.length < 3) {
+					return "Please provide at least 3 characters to search by.";
+				} else { return true; }
+			}
+                }, {
+			xtype: "fieldcontainer",
+			fieldLabel: "Case sensitive?",
+			defaultType: 'checkboxfield',
+			items: [ {
+				name: 'cs',
+				
+				inputValue: true,
+				checked: true,
+				id: 'cs'
+			}]
+		}, {
+			xtype: 'button',
+			text: "Search",
+			width: bw*0.5,
+			handler: function() {
+                        var values = search.getForm().getValues();
+			var query = values.query
+			if(query == "" || query.length < 3) { return false; }
+			var sens = !values.cs;
+			var re = new RegExp(query,(sens?"i":""));
+			pastes.filterBy(function(rec) {
+				title = rec.get("title");
+				body = rec.get("content");
+				if(body.match(re) || title.match("re")) {
+					return true;
+				} else {
+					return false;
+				}
+                        })
+		}
+	}, {
+		xtype: 'button',
+		text: 'Reset paste list.',
+		handler: function() {
+			pastes.load();
+			search.getForm().reset();
+		}
+	}]
+	}]
+    });
+			notify = Ext.create("Ext.panel.Panel", {
+				id: "notifications",
+				tpl: "<div class='msg'>{msg}</div>",
+				tplWriteMode: 'append',
+				autoScroll: true,
+				title: "Notifications",
+				height: bh*0.5,
+				width: bw*0.5
+			})
+			/*oldnotify = Ext.create("Ext.panel.Panel", {
+				id: "oldnotifications",
+				tpl: "<div class='msg'>{msg}</div>",
+				tplWriteMode: 'append',
+				html: "<em>under construction</i>",
+				autoScroll: true,
+				title: "Old Notifications",
+				height: bh*0.5,
+				width: bw*0.5
+			})*/
+		cont.add(search);
+		    poll = new Ext.direct.PollingProvider({
+				type:'polling',
+				url: '/notify',
+				listeners: {
+					data: {
+						fn: function(provider, event) {
+							if(event.nothing) { return false; }
+							for(var ix in event.data) {
+								ent = event.data[ix];
+								
+								notify.update({ msg: "<em>Message from the system: </em>"+ent.msg })
+								/*oldnotify.update({ msg: "<em>Message from the system: </em>"+ent.msg })*/
+								notify.body.scroll("b",100000,true);
+							}
+						}
+					}
+				}
+		    });
+		notz = Ext.create("Ext.tab.Panel",{
+			items: [
+				notify,
+			]
+		})
+		Ext.direct.Manager.addProvider(poll);
+		userPanel.add(cont);
+		cont.setActiveTab(search);
+		userPanel.add(notz);
+	})
 });

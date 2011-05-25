@@ -32,33 +32,27 @@ __PACKAGE__->table("users");
 
 =head2 username
 
-  data_type: 'varchar'
+  data_type: 'text'
   is_nullable: 1
-  size: 32
+  original: {data_type => "varchar"}
 
 =head2 name
 
-  data_type: 'varchar'
+  data_type: 'text'
   is_nullable: 1
-  size: 32
+  original: {data_type => "varchar"}
 
 =head2 email
 
-  data_type: 'varchar'
+  data_type: 'text'
   is_nullable: 1
-  size: 64
+  original: {data_type => "varchar"}
 
 =head2 password
 
-  data_type: 'char'
+  data_type: 'text'
   is_nullable: 1
-  size: 32
-
-=head2 last_paste
-
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 1
+  original: {data_type => "varchar"}
 
 =cut
 
@@ -71,19 +65,63 @@ __PACKAGE__->add_columns(
     sequence          => "users_id_seq",
   },
   "username",
-  { data_type => "varchar", is_nullable => 1, size => 32 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "name",
-  { data_type => "varchar", is_nullable => 1, size => 32 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "email",
-  { data_type => "varchar", is_nullable => 1, size => 64 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "password",
-  { data_type => "char", is_nullable => 1, size => 32 },
-  "last_paste",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
+
+=head2 links
+
+Type: has_many
+
+Related object: L<pastebin::Schema::Paste::Result::Link>
+
+=cut
+
+__PACKAGE__->has_many(
+  "links",
+  "pastebin::Schema::Paste::Result::Link",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 notifications
+
+Type: has_many
+
+Related object: L<pastebin::Schema::Paste::Result::Notification>
+
+=cut
+
+__PACKAGE__->has_many(
+  "notifications",
+  "pastebin::Schema::Paste::Result::Notification",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 =head2 pastes
 
@@ -115,37 +153,13 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 last_paste
 
-Type: belongs_to
-
-Related object: L<pastebin::Schema::Paste::Result::Paste>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "last_paste",
-  "pastebin::Schema::Paste::Result::Paste",
-  { id => "last_paste" },
-  {
-    is_deferrable => 1,
-    join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
-  },
-);
-
-__PACKAGE__->has_many(map_user_role => "pastebin::Schema::Paste::Result::UserRole","user_id");
-
-__PACKAGE__->many_to_many(
-	roles => "map_user_role",
-	'role'
-);
-
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:20:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N3UMMQwlLTcmARj554kaNA
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-24 23:12:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I6g54F7Am1eu6NvTpQd1MA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->has_many(map_user_role => 'pastebin::Schema::Paste::Result::UserRole', 'user_id');
+__PACKAGE__->many_to_many( roles => 'map_user_role', 'role' );
 __PACKAGE__->meta->make_immutable;
 1;

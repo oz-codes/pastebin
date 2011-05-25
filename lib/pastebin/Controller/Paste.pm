@@ -119,7 +119,6 @@ sub create :Direct :DirectArgs(1)  {
 			user_id	   => $uid
 			});
 		$id = $row->{_column_data}->{id};
-		$c->model("Paste::user")->find({id=>$uid})->update({last_paste => $id});
 		$json = { msg => "Your post was successfully made. You can view it using the saved pastes tab." };
 	}
 	$c->res->content_type("application/json");
@@ -168,9 +167,6 @@ sub createFork :Direct :DirectArgs(1) {
                         user_id    => $uid
                         });
                 $id = $row->{_column_data}->{id};
-		if($c->user_exists) {
-			$c->model("Paste::user")->find({id=>$uid})->update({last_paste => $id});
-		}
 		$c->model("Paste::fork")->create({paste_id => $oldId, fork_id => $id});
                 $json = { msg => "Your post was successfully made. You can view it using the saved pastes tab." };
         }
@@ -192,7 +188,7 @@ sub createRev :Direct :DirectArgs(1) {
                 $json = { error => "You did not provide any content.", errno => 2};
         } elsif(!defined $oldId) {
                 $json = { error => "I don't know how you got this message. Seriously.", errno=>-1 };
-        } elsif(!$c->user_exists) {
+        } elsif(!$c->user_exists || !defined $c->session->{"__user"}) {
 		$json = { error => "You are not currently logged in.", errno => 5 };
 	} else {
                 my $language = $kate->syntaxes->{$lang};
@@ -204,6 +200,7 @@ sub createRev :Direct :DirectArgs(1) {
 		$version = defined $version ? $version+1 : 1;
                 if(defined $c->session->{"__user"}) {
                         $uid = $c->session->{"__user"}->{"id"};
+			warn 
                 } else {
                         $uid = undef;
                 }
@@ -216,9 +213,6 @@ sub createRev :Direct :DirectArgs(1) {
                         user_id    => $uid
                         });
                 $id = $row->{_column_data}->{id};
-                if($c->user_exists) {
-                        $c->model("Paste::user")->find({id=>$uid})->update({last_paste => $id});
-                }
                 $c->model("Paste::revision")->create({paste_id => $oldId, revision_id => $id, version => $version });
                 $json = { msg => "Your post was successfully made. You can view it using the saved pastes tab." };
         }
@@ -249,6 +243,34 @@ sub hasRevision :Direct :DirectArgs(1) {
 	$c->stash(template=>"json/general.json",json=>$json);
 }
 
+sub hasrev :Method {
+        my ( $self, $c, $id) = @_;
+        my @q = $c->model("Paste::revision")->search({paste_id => $id});
+	return $#q+1;
+}
+
+
+sub isrev :Method {
+	my ($self, $c, $id) = @_;
+	open my $f, ">debug";
+	print $f "checking to see if $id is a rev\n";
+	my $rs = $c->model("Paste::revision")->find({revision_id => $id});
+	my $ret;
+	if(defined $rs) {
+		print $f "$id is a revision\n";
+		print $f "dump of rs\n";
+		print $f Dumper($rs);
+		$ret = $rs->get_column("paste_id");
+	} else {
+		print $f "$id is not a revision\n";
+		$ret = -1;
+	}
+	print $f "returning $ret from isrev\n";
+	close $f;
+	return $ret;
+}
+		
+
 sub isRevision :Direct :DirectArgs(1) {
 	my ( $self, $c ) = @_;
 	my $opts = $c->req->data->[0];
@@ -257,7 +279,7 @@ sub isRevision :Direct :DirectArgs(1) {
 	my $rs = $c->model("Paste::revision")->find({revision_id => $id});
 	my $json;
 	if(defined $rs) {
-		$json = {answer => $rs->{__column_data}->{paste_id}};
+		$json = {answer => $rs->get_column("paste_id")};
 	} else {
 		$json = {answer => -1};
 	}
@@ -347,13 +369,121 @@ sub delete : Direct : DirectArgs(1) {
 		my $title = $paste->{_column_data}->{title};
 		my $oid = $paste->{_column_data}->{user_id};
 		my $candel;
-		if($c->check_user_roles("mod") || $oid == $c->session->{__user}->{id}) {
+		my $rev;
+		my $msg;
+		if((($rev = $self->isrev($c,$pid)) > -1)) {
+			my $rid = $c->model("Paste::revision")->find({revision_id => $pid})->get_column("id");
+			my @revs = $c->model("Paste::revision")->search_literal("paste_id = ? AND id >= ?", ($rev, $rid));	
+			if($c->check_user_roles("admin")) {
+				my @del;
+				foreach my $rev(@revs) {
+					my $paste = $c->model("Paste::paste")->find({id => $rev->get_column("revision_id")});
+					push @del, $paste;
+				}
+				foreach my $p (@del) {
+					my $uid = $p->get_column("user_id");
+					my $name = $p->get_column("title");
+					my $id = $p->get_column("id");
+					my $time = time;
+					$c->model("Paste::notification")->create({
+						user_id => $uid,
+						message => "Your paste, $name (id: $id), has been deleted.",
+						created_on => $time
+					});
+					warn "Deleted $name";
+					$msg .= "Deleted: $name (id: $id)<br />";	
+					$p->delete();
+				}
+				$json = { msg => $msg };
+			} else {
+				my $nodel = 0;
+				my @del;
+				foreach my $rev (@revs) {
+						warn "rev paste id = " . $rev->get_column("paste_id");
+						my $p = $c->model("Paste::paste")->find({id => $rev->get_column("revision_id")});
+						warn "paste column data user id: " . $p->get_column("user_id");
+						warn "sessh user i : " . $c->session->{__user}->{id};
+						if($p->get_column("user_id") != $c->session->{__user}->{id}) {
+							$nodel = 1;
+							last;
+						}
+						push @del,$p;
+				}
+				if($nodel) {
+					$json = { error => "You cannot delete a revision if there are revisions under it that you do not own.", errno => 100 }		
+				} else {
+					foreach my $p (@del) {
+						$title = $p->get_column("title");
+						my $dd = $p->get_column("id");
+						$p->delete();
+						warn "Deleted: $title";
+						$msg .= "Deleted: $title (id: $dd)<br />";
+					}
+					$json = { msg => $msg };	
+				}
+			}
+		} elsif(($rev = $self->hasrev($c,$pid)) > 0) {
+                        my @revs = $c->model("Paste::revision")->search_literal("paste_id = ?", ($pid));
+                        if($c->check_user_roles("admin")) {
+                                my @del;
+				push @del, $paste;
+                                foreach my $rev(@revs) {
+                                        my $paste = $c->model("Paste::paste")->find({id => $rev->get_column("revision_id")});
+                                        push @del, $paste;
+                                }
+                                foreach my $p (@del) {
+                                        my $uid = $p->get_column("user_id");
+                                        my $name = $p->get_column("title");
+                                        my $id = $p->get_column("id");
+                                        my $time = time;
+                                        $c->model("Paste::notification")->create({
+                                                user_id => $uid,
+                                                message => "Your paste, $name (id: $id), has been deleted.",
+                                                created_on => $time
+                                        });
+                                        warn "Deleted $name";
+                                        $msg .= "Deleted: $name (id: $id)<br />";
+                                        $p->delete();
+                                }
+                                $json = { msg => $msg };
+                        } else {
+                                my $nodel = 0;
+                                my @del;
+				push @del, $paste;
+                                foreach my $rev (@revs) {
+                                                warn "rev paste id = " . $rev->get_column("paste_id");
+                                                my $p = $c->model("Paste::paste")->find({id => $rev->get_column("revision_id")});
+                                                warn "paste column data user id: " . $p->get_column("user_id");
+                                                warn "sessh user i : " . $c->session->{__user}->{id};
+                                                if($p->get_column("user_id") != $c->session->{__user}->{id}) {
+                                                        $nodel = 1;
+                                                        last;
+                                                }
+                                                push @del,$p;
+                                }
+                                if($nodel) {
+                                        $json = { error => "You cannot delete a revision if there are revisions under it that you do not own.", errno => 100 }
+                                } else {
+                                        foreach my $p (@del) {
+                                                $title = $p->get_column("title");
+                                                my $dd = $p->get_column("id");
+                                                $p->delete();
+                                                warn "Deleted: $title";
+                                                $msg .= "Deleted: $title (id: $dd)<br />";	
+					}
+					$json = { msg => $msg };
+				}
+			}
+		}
+		elsif($c->check_user_roles("admin") || $oid == $c->session->{__user}->{id}) {
+			$paste = $c->model("Paste::paste")->find({id => $pid});
 			$paste->delete();
 			$json = { msg => "$title has been deleted." };
 		} else {
 			$json = { error => "You do not have permission to delete this." };
 		}
 	}
+	warn Dumper($json);
 	$c->stash(template=>"json/general.json",json=>$json);
 }	
 
@@ -363,13 +493,17 @@ sub canDelete : Direct : DirectArgs(1) {
 	my $opts = $c->req->data->[0];
 	my $pid = $opts->{"pid"};
 	my $json;
+	warn Dumper($c->session->{__user}); 
 	if(!defined $pid) {
+		warn "no post id";
 		$json = { error => "You did not provide a post ID." };
 	} else {
 		my $paste = $c->model("Paste::paste")->find({id => $pid});
-		my $oid = $paste->{_column_data}->{user_id};
+		my $oid = $paste->get_column("user_id");
 		my $candel;
-		if($c->check_user_roles("mod")) {
+		if(!defined $c->session->{__user}) {
+			$candel = 0;
+		} elsif( $c->check_user_roles("admin") ) {
 			$candel = 1;
 		} elsif($oid == $c->session->{__user}->{id}) {
 			$candel = 1;
@@ -379,7 +513,38 @@ sub canDelete : Direct : DirectArgs(1) {
 		$json = { candel => $candel };
 	}
 	$c->stash(template=>"json/general.json",json=>$json);
-}	
+}
+
+sub notify : Path("/notify") {
+	my ($self, $c) = @_;
+	my $json;
+	if($c->user_exists) {
+		my $time = time-3;
+		my $id = $c->session->{__user}->{id};
+		my @q = $c->model("Paste::notification")->search_literal("user_id =? AND created_on < ? AND sent_on IS NULL",($id, $time));
+		my $len = $#q+1;
+		if($len <= 0) {
+			$json = { type => "event", name => "message", nothing => 1 };
+		} else {
+			my $arr = &jarr(\@q);
+			warn Dumper($arr);
+			my @a = @{$arr};
+			my @msgs;
+			foreach my $ent(@a) {
+				push @msgs, {msg => $ent->{message}, time => $ent->{created_on}};
+			}
+			$json = {type => "event", name => " message", data => \@msgs};
+			foreach my $qq (@q) {
+				$qq->update({sent_on => time});
+			}	
+		}
+	} else {
+		$json = { type => "event", name => "message", nothing => 1, notloggedin => 1 };
+	}
+	$c->res->content_type("application/json");
+	$c->stash(template=>"json/general.json",json=>$json);
+}
+		
 
 sub jarr : Method {
         my $a = shift;

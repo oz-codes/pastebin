@@ -41,6 +41,20 @@ sub out : Direct  {
 	$c->stash(template=>"json/general.json",json=>{msg => "You have been logged out."});
 }
 
+sub isAdmin : Direct {
+	my ($self, $c) = @_;
+	my $json;
+	my $isa;
+	if($c->user_exists) {
+		$isa = $c->check_user_roles('admin')?1:0;
+	} else {
+		$isa = 0;
+	}	
+	$json = { answer => $isa };
+	$c->res->content_type("application/json");
+	$c->stash(template => "json/general.json", json => $json);
+}
+
 sub in : Direct : DirectArgs(1) {
         my ($self, $c) = @_;
 	my $opts = $c->req->data->[0];
@@ -70,13 +84,8 @@ sub in : Direct : DirectArgs(1) {
         $c->stash(template => 'json/general.json',json=>$json);
     }
 
-sub loggedin : Direct : DirectArgs(1) {
+sub loggedin : Direct {
 	my ( $self , $c ) = @_;
-	open my $f, ">session";
-	print $f Dumper($c->session->{__user});
-	close $f;
-	my $checks = (defined $c->session->{checks})?$c->session->{checks}:1;
-	warn "checks = $checks";
 	
 	my $li;
 	if($c->user_exists()) {
@@ -86,7 +95,6 @@ sub loggedin : Direct : DirectArgs(1) {
 	}		
 	my $json = { loggedin => $li };
 	$c->res->content_type("application/json");
-	$c->session->{checks} = $checks+1;
 	$c->_save_session();
 	$c->stash(template=>"json/general.json", json=>$json);
 }

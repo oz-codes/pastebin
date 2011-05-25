@@ -32,9 +32,9 @@ __PACKAGE__->table("pastes");
 
 =head2 title
 
-  data_type: 'varchar'
+  data_type: 'text'
   is_nullable: 1
-  size: 32
+  original: {data_type => "varchar"}
 
 =head2 content
 
@@ -43,15 +43,15 @@ __PACKAGE__->table("pastes");
 
 =head2 lang
 
-  data_type: 'varchar'
+  data_type: 'text'
   is_nullable: 1
-  size: 16
+  original: {data_type => "varchar"}
 
 =head2 poster
 
-  data_type: 'varchar'
+  data_type: 'text'
   is_nullable: 1
-  size: 16
+  original: {data_type => "varchar"}
 
 =head2 user_id
 
@@ -69,12 +69,6 @@ __PACKAGE__->table("pastes");
   data_type: 'timestamp'
   is_nullable: 1
 
-=head2 lang_code
-
-  data_type: 'varchar'
-  is_nullable: 1
-  size: 64
-
 =cut
 
 __PACKAGE__->add_columns(
@@ -86,21 +80,31 @@ __PACKAGE__->add_columns(
     sequence          => "pastes_id_seq",
   },
   "title",
-  { data_type => "varchar", is_nullable => 1, size => 32 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "content",
   { data_type => "text", is_nullable => 1 },
   "lang",
-  { data_type => "varchar", is_nullable => 1, size => 16 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "poster",
-  { data_type => "varchar", is_nullable => 1, size => 16 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "created_on",
   { data_type => "timestamp", is_nullable => 1 },
   "updated_on",
   { data_type => "timestamp", is_nullable => 1 },
-  "lang_code",
-  { data_type => "varchar", is_nullable => 1, size => 64 },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -171,7 +175,7 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 revisions
+=head2 revisions_pastes
 
 Type: has_many
 
@@ -180,30 +184,30 @@ Related object: L<pastebin::Schema::Paste::Result::Revision>
 =cut
 
 __PACKAGE__->has_many(
-  "revisions",
+  "revisions_pastes",
   "pastebin::Schema::Paste::Result::Revision",
   { "foreign.paste_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 users
+=head2 revisions_revisions
 
 Type: has_many
 
-Related object: L<pastebin::Schema::Paste::Result::User>
+Related object: L<pastebin::Schema::Paste::Result::Revision>
 
 =cut
 
 __PACKAGE__->has_many(
-  "users",
-  "pastebin::Schema::Paste::Result::User",
-  { "foreign.last_paste" => "self.id" },
+  "revisions_revisions",
+  "pastebin::Schema::Paste::Result::Revision",
+  { "foreign.revision_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:20:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W7zJCeB9abv4FI0rDddZ/A
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-24 18:13:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MIBIwKL+G2/IYq2mvueuHQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

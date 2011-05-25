@@ -36,12 +36,13 @@ __PACKAGE__->table("revisions");
   is_foreign_key: 1
   is_nullable: 1
 
-=head2 version
+=head2 revision_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
-=head2 revision_id
+=head2 version
 
   data_type: 'integer'
   is_nullable: 1
@@ -58,9 +59,9 @@ __PACKAGE__->add_columns(
   },
   "paste_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "version",
-  { data_type => "integer", is_nullable => 1 },
   "revision_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "version",
   { data_type => "integer", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
@@ -87,9 +88,29 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 revision
 
-# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-12 14:20:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h7Q++CPDlP3h7eF2RR9lzQ
+Type: belongs_to
+
+Related object: L<pastebin::Schema::Paste::Result::Paste>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "revision",
+  "pastebin::Schema::Paste::Result::Paste",
+  { id => "revision_id" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07010 @ 2011-05-24 18:13:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Jco6xBq0LfuOVSiEHmN+LA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

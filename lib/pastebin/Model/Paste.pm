@@ -7,10 +7,9 @@ __PACKAGE__->config(
     schema_class => 'pastebin::Schema::Paste',
     
     connect_info => {
-        dsn => 'dbi:Pg:dbname=pastebin',
+        dsn => 'dbi:Pg:database=pastebin',
         user => 'mxe',
         password => 'alpha345',
-        name_sep => q{.},
     }
 );
 
