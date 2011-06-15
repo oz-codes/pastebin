@@ -59,7 +59,6 @@ Ext.onReady( function() {
                                                 }                                                               
                                         });                                                                     
                                         x = event.getPageX()-10;                                        
-					console.log("revs: "+revs);
                                         y = event.getPageY()-10;                                
                                         mnu.showAt(x,y);                                
                                         })
@@ -119,6 +118,62 @@ Ext.onReady( function() {
     });
 
 
+    links = Ext.create("Ext.form.Panel",{                                               
+        id: "linkTab",                                                                         
+        title: "Shortlinks",                                                                
+        items: [{                                                                               
+                xtype: 'fieldset',                                                      
+                title: 'Short links',                                                
+                defaults: {                                             
+			anchor: "100%",
+                },                                                              
+                items: [{                                                       
+                        fieldLabel: "URL",                                 
+                        xtype: "textfield",                                     
+                        emptyText: "URL...",                               
+                        name: "url",                               
+                        id: 'url',
+			allowBlank: false,
+			validator: function(r) {
+				if(!r.match(/^(http|https|ftp)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/)) {
+					return "Please provide a URL in the proper format, including http(s)://";
+				} else {
+					return true;
+				}
+			}
+                }, {                                                            
+			fieldLabel: "http://hg.fr.am:3002/l/",
+			labelAlign: "right",
+			labelSeparator: "",
+			labelPad: 13,
+                        xtype: "textfield",                                     
+			allowBlank: true,
+			anchor: "30%",
+                        name: 'shortlink',                               
+                        id: 'slink'                                          
+                }],
+	}],
+	buttons: [{
+                text: "Create",
+                width: bw,
+                height: 32,
+                handler: function() {
+                        var values = Ext.getCmp("linkTab").getForm().getValues();
+                        var link = values.url;
+                        var shortlink = values.shortlink;
+			if(!link.match(/(http|https|ftp)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/)) { return false; } 
+			if(shortlink == "") { shortlink = null }
+                        Link.create({shortlink: shortlink, link: link}, function(j) {
+                                if(j.error) {
+                                        Ext.Msg.alert("Error",j.error);
+                                } else {
+                                        Ext.Msg.alert("Notice",j.msg);
+					getLinks();
+                                }
+			})
+                        } 
+		}]
+	})
     login = Ext.create("Ext.form.Panel",{
 	id: "loginTab",
 	title: "Log in",
@@ -238,6 +293,7 @@ Ext.onReady( function() {
 													login.disable();
 													logout.enable();
 													newPaste.enable();
+													addLinkTab();
 													tabs.setActiveTab(newPaste)
 												}
 											});
@@ -276,6 +332,7 @@ Ext.onReady( function() {
 							addAdminTab();
 						}
 					})
+					addLinkTab();
 				}
 					/*tabs.add(logout);
 					tabs.remove(login,true);
@@ -303,6 +360,7 @@ Ext.onReady( function() {
 					newPaste.disable();
 					tabs.setActiveTab(Ext.getCmp("loginTab"));
 					removeAdminTab();
+					removeLinkTab();
 				/*	tabs.add(login);
                                         tabs.remove('logoutTab',true);*/
                                 }
@@ -613,7 +671,8 @@ Ext.onReady( function() {
 		items: [
 			Ext.getCmp("newPaste"),
 			login,
-			logout
+			logout,
+			links
 		],
 		listeners: {
 			render: {	
@@ -999,6 +1058,49 @@ Ext.onReady( function() {
 	function removeAdminTab() {
 		Ext.getCmp("funcpanel").remove(Ext.getCmp("adminpanel"));
 	}
+	function getLinks() {	
+		Link.list(function(r) {
+			if(Ext.get("shortlink")) {
+				Ext.get("shortlink").remove();
+			}
+			if(r.error) {
+				Ext.Msg.alert("Error",r.error);
+			} else {
+				links = r.links;
+				console.info(links);
+				for(i = 0; i < links.length; i++) {
+					link = links[i];
+					console.log(i);
+					console.info(link);
+					str = link.shortlink;
+					str += ": <a href='http://hg.fr.am:3002/l/";
+					str += link.shortlink;
+					str += "'>";
+					str += link.link;
+					str += "</a>";
+					Ext.getCmp("linkpanel").update({ msg: str });
+				}
+			}
+		})
+	}
+	function addLinkTab() {
+		link = Ext.create("Ext.panel.Panel", {
+			id: "linkpanel",
+			title: "Links",
+			tpl: "<div class='shortlink'>{msg}</div>",
+			autoScroll: true,
+			tplWriteMode: 'append',
+			listeners: {
+				afterrender: {
+					fn: getLinks
+				}
+			}
+		});
+		Ext.getCmp("infopanel").add(link);
+	}
+	function removeLinkTab() {
+		Ext.getCmp("infopanel").remove(Ext.getCmp("linkpanel"));
+	}
 	Auth.isAdmin(function(r) {
 		var panel
 		var cont = Ext.create("Ext.tab.Panel", {
@@ -1112,6 +1214,7 @@ Ext.onReady( function() {
 				}
 		    });
 		notz = Ext.create("Ext.tab.Panel",{
+			id: "infopanel",
 			items: [
 				notify,
 			]
@@ -1121,4 +1224,9 @@ Ext.onReady( function() {
 		cont.setActiveTab(search);
 		userPanel.add(notz);
 	})
+	Auth.loggedin(function(r) {
+		if(r.loggedin && r.loggedin == 1) {
+			addLinkTab();
+		}
+	});
 });
